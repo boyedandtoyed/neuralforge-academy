@@ -1,0 +1,52 @@
+# Lesson 1: Vectors and Matrices
+
+## What is a vector?
+
+A **vector** is an ordered list of numbers. In machine learning, vectors represent data points, features, or model weights.
+
+$$
+\mathbf{v} = \begin{bmatrix} 1.2 \\ -0.5 \\ 3.7 \end{bmatrix}
+$$
+
+Each number is a **component** or **element**. A vector with $n$ elements lives in $n$-dimensional space.
+
+## Vector operations
+
+The **dot product** is the most fundamental operation in ML:
+
+$$
+\mathbf{a} \cdot \mathbf{b} = \sum_{i=1}^{n} a_i b_i = a_1 b_1 + a_2 b_2 + \cdots + a_n b_n
+$$
+
+Try it live:
+
+```python
+import numpy as np
+
+# Define two vectors
+a = np.array([1.0, 2.0, 3.0])
+b = np.array([4.0, 5.0, 6.0])
+
+# Dot product
+dot = np.dot(a, b)
+print(f"a · b = {dot}")  # Expected: 32.0
+
+# Magnitude (L2 norm)
+mag_a = np.linalg.norm(a)
+print(f"||a|| = {mag_a:.4f}")
+
+# Unit vector (normalize)
+a_unit = a / mag_a
+print(f"Unit vector: {a_unit.round(4)}")
+print(f"||a_unit|| = {np.linalg.norm(a_unit):.4f}")  # Should be 1.0
+```
+
+## Matrices
+
+A **matrix** is a 2D grid of numbers — the basic building block of neural network layers.
+
+$$
+W = \begin{bmatrix} w_{11} & w_{12} & w_{13} \\ w_{21} & w_{22} & w_{23} \end{bmatrix}
+$$
+
+A matrix with $m$ rows and $n$ columns has shape $(m, n)$.

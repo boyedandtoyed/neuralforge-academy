@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 10 10 20;
+    --foreground: 248 250 252;
+  }
+  * { box-sizing: border-box; }
+  body { background: rgb(var(--background)); color: rgb(var(--foreground)); }
+}
+
+@layer components {
+  .code-editor { font-family: 'JetBrains Mono', 'Fira Code', monospace; }
+  .gradient-text {
+    background: linear-gradient(135deg, #0ea5e9, #8b5cf6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+}
