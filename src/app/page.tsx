@@ -1,11 +1,78 @@
 import Link from 'next/link';
 
-const courses = [
-  { slug: 'math-foundations', title: 'Math Foundations', lessons: 4, icon: '∑', description: 'Vectors, matrices, derivatives, probability, gradient descent' },
-  { slug: 'ml-fundamentals', title: 'ML Fundamentals', lessons: 4, icon: '📊', description: 'Linear/logistic regression, model evaluation, bias-variance' },
-  { slug: 'classical-ml', title: 'Classical ML', lessons: 4, icon: '🌳', description: 'Decision trees, SVMs, clustering, PCA, t-SNE, UMAP' },
-  { slug: 'deep-learning', title: 'Deep Learning', lessons: 4, icon: '🧠', description: 'Neural networks, backprop, CNNs, RNNs, LSTM, GRU' },
-  { slug: 'transformers-llms', title: 'Transformers & LLMs', lessons: 7, icon: '🤖', description: 'Attention, BERT, GPT, RLHF, RAG, agents, safety' },
+const phases = [
+  {
+    slug: 'introduction',
+    title: 'Introduction',
+    lessons: 4,
+    icon: '⚡',
+    phase: 0,
+    description: 'Python & NumPy setup, biological neurons, probability theory, and matrix operations',
+  },
+  {
+    slug: 'neuron-model',
+    title: 'Neuron Model & Architectures',
+    lessons: 3,
+    icon: '🧬',
+    phase: 1,
+    description: 'The artificial neuron, activation functions (ReLU, GELU, softmax), and network topologies',
+  },
+  {
+    slug: 'regression',
+    title: 'Regression',
+    lessons: 2,
+    icon: '📈',
+    phase: 2,
+    description: 'Linear regression, logistic regression, cross-entropy loss, and softmax classifier',
+  },
+  {
+    slug: 'optimization',
+    title: 'Optimization',
+    lessons: 5,
+    icon: '∇',
+    phase: 3,
+    description: 'Backprop, Hessians, SGD → Adam, LR schedules, vanishing gradients & regularization',
+  },
+  {
+    slug: 'cnns',
+    title: 'Convolutional Neural Networks',
+    lessons: 2,
+    icon: '🖼',
+    phase: 4,
+    description: 'Convolution, pooling, padding/stride, and landmark architectures LeNet → ResNet',
+  },
+  {
+    slug: 'autoencoders',
+    title: 'Autoencoders & VAEs',
+    lessons: 2,
+    icon: '🔁',
+    phase: 5,
+    description: 'Bottleneck autoencoders, variational autoencoders, ELBO, and the reparameterization trick',
+  },
+  {
+    slug: 'rnns',
+    title: 'Recurrent Networks',
+    lessons: 2,
+    icon: '🔄',
+    phase: 6,
+    description: 'Sequence modeling, backprop through time, LSTM gating, and GRU',
+  },
+  {
+    slug: 'transformers',
+    title: 'Transformers',
+    lessons: 3,
+    icon: '🤖',
+    phase: 7,
+    description: 'Positional encodings, scaled dot-product attention, multi-head attention, full architecture',
+  },
+  {
+    slug: 'generative',
+    title: 'Generative Models',
+    lessons: 2,
+    icon: '✨',
+    phase: 8,
+    description: 'GAN minimax training, mode collapse, DDPM diffusion forward/reverse process & score matching',
+  },
 ];
 
 export default function HomePage() {
@@ -26,39 +93,48 @@ export default function HomePage() {
           </h1>
           <p className="text-xl text-gray-400 mb-8 max-w-2xl mx-auto">
             Learn machine learning from first principles — every math concept paired with live
-            TensorFlow.js, PyTorch-syntax, and NumPy implementations you can edit and run instantly.
+            NumPy implementations you can edit and run instantly in your browser.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/courses/math-foundations/01-vectors-matrices"
-              className="bg-blue-600 hover:bg-blue-500 text-white font-semibold px-8 py-3 rounded-lg transition-colors">
+            <Link
+              href="/courses/introduction/00-setup"
+              className="bg-blue-600 hover:bg-blue-500 text-white font-semibold px-8 py-3 rounded-lg transition-colors"
+            >
               Start Learning Free
             </Link>
-            <Link href="/playground"
-              className="border border-gray-700 hover:border-gray-500 text-gray-300 font-semibold px-8 py-3 rounded-lg transition-colors">
+            <Link
+              href="/playground"
+              className="border border-gray-700 hover:border-gray-500 text-gray-300 font-semibold px-8 py-3 rounded-lg transition-colors"
+            >
               Open Playground
             </Link>
           </div>
         </div>
       </section>
 
-      {/* Courses grid */}
+      {/* Phases grid */}
       <section className="max-w-6xl mx-auto px-6 py-16">
-        <h2 className="text-3xl font-bold text-center mb-4">23 Lessons, 5 Phases</h2>
-        <p className="text-gray-400 text-center mb-12">From linear algebra to building your own LLM — every step interactive.</p>
+        <h2 className="text-3xl font-bold text-center mb-4">25 Lessons, 9 Phases</h2>
+        <p className="text-gray-400 text-center mb-12">
+          From Python setup to GANs and diffusion models — every step interactive with KaTeX math and runnable NumPy code.
+        </p>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {courses.map((course, i) => (
-            <Link key={course.slug} href={`/courses/${course.slug}`}
-              className="group bg-gray-900 border border-gray-800 hover:border-blue-500/50 rounded-xl p-6 transition-all hover:shadow-lg hover:shadow-blue-500/10">
+          {phases.map((phase) => (
+            <Link
+              key={phase.slug}
+              href={`/courses/${phase.slug}`}
+              className="group bg-gray-900 border border-gray-800 hover:border-blue-500/50 rounded-xl p-6 transition-all hover:shadow-lg hover:shadow-blue-500/10"
+            >
               <div className="flex items-start justify-between mb-4">
-                <span className="text-4xl">{course.icon}</span>
+                <span className="text-4xl">{phase.icon}</span>
                 <span className="text-xs text-gray-500 bg-gray-800 px-2 py-1 rounded-full">
-                  Phase {i} · {course.lessons} lessons
+                  Phase {phase.phase} &middot; {phase.lessons} lesson{phase.lessons !== 1 ? 's' : ''}
                 </span>
               </div>
               <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-blue-400 transition-colors">
-                {course.title}
+                {phase.title}
               </h3>
-              <p className="text-sm text-gray-400">{course.description}</p>
+              <p className="text-sm text-gray-400">{phase.description}</p>
             </Link>
           ))}
         </div>
@@ -68,7 +144,7 @@ export default function HomePage() {
       <section className="border-t border-gray-800 py-12 px-6">
         <p className="text-center text-gray-500 text-sm mb-6">Powered by</p>
         <div className="flex flex-wrap justify-center gap-4 max-w-2xl mx-auto">
-          {['Next.js 15', 'React 19', 'TypeScript', 'Pyodide', 'TensorFlow.js', 'D3.js', 'Three.js', 'KaTeX'].map(tech => (
+          {['Next.js 15', 'React 19', 'TypeScript', 'Pyodide', 'KaTeX', 'TailwindCSS', 'D3.js', 'Three.js'].map(tech => (
             <span key={tech} className="bg-gray-800 text-gray-300 text-xs px-3 py-1.5 rounded-full border border-gray-700">
               {tech}
             </span>

@@ -1,58 +1,88 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
-const COURSES: Record<string, { title: string; description: string; lessons: { slug: string; title: string; description: string }[] }> = {
-  'math-foundations': {
-    title: 'Math Foundations',
-    description: 'Build the mathematical intuition behind every ML algorithm — vectors, calculus, probability, and optimization.',
+const COURSES: Record<string, {
+  title: string;
+  description: string;
+  lessons: { slug: string; title: string; description: string }[];
+}> = {
+  'introduction': {
+    title: 'Introduction',
+    description: 'Python environment setup, the history of neural networks, probability fundamentals, and the matrix operations that underpin every ML computation.',
     lessons: [
-      { slug: '01-vectors-matrices', title: 'Vectors & Matrices', description: 'Dot products, matrix multiplication, linear transformations' },
-      { slug: '02-derivatives-gradients', title: 'Derivatives & Gradients', description: 'Chain rule, partial derivatives, Jacobians, directional derivatives' },
-      { slug: '03-probability-stats', title: 'Probability & Statistics', description: 'Distributions, expectation, MLE, Bayes theorem' },
-      { slug: '04-gradient-descent', title: 'Gradient Descent', description: 'SGD, momentum, Adam — optimizing loss functions step by step' },
+      { slug: '00-setup',           title: 'Python, NumPy & Matplotlib Setup',           description: 'Pyodide in-browser Python, NumPy arrays, broadcasting, z-score normalization' },
+      { slug: '01-history-biology', title: 'History & Biological Neurons',                description: 'McCulloch-Pitts (1943), Rosenblatt perceptron (1958), AI winters, AlexNet (2012)' },
+      { slug: '02-probability',     title: 'Probability & Statistics',                   description: 'Bayes theorem, MLE, CLT, KL divergence, Gaussian distribution' },
+      { slug: '03-matrix-ops',      title: 'Matrix Operations',                          description: 'Shapes, broadcasting, eigendecomposition, gradient rules for matrices' },
     ],
   },
-  'ml-fundamentals': {
-    title: 'ML Fundamentals',
-    description: 'Core supervised learning algorithms, model evaluation, and the bias-variance tradeoff.',
+  'neuron-model': {
+    title: 'Neuron Model & Architectures',
+    description: 'The artificial neuron from first principles, every major activation function, and how neurons are arranged into networks.',
     lessons: [
-      { slug: '05-linear-regression', title: 'Linear Regression', description: 'Ordinary least squares, normal equation, closed-form solution' },
-      { slug: '06-logistic-regression', title: 'Logistic Regression', description: 'Sigmoid, cross-entropy loss, decision boundaries' },
-      { slug: '07-model-evaluation', title: 'Model Evaluation', description: 'Precision, recall, ROC curves, cross-validation' },
-      { slug: '08-bias-variance', title: 'Bias-Variance Tradeoff', description: 'Overfitting, regularization, L1/L2 penalties' },
+      { slug: '04-single-neuron',    title: 'The Artificial Neuron',                    description: 'Weighted sum, bias, forward pass, He initialization' },
+      { slug: '05-activation-fns',   title: 'Activation / Transfer Functions',          description: 'ReLU, sigmoid, tanh, GELU, softmax, dying ReLU problem' },
+      { slug: '06-network-topology', title: 'Network Topology & Architectures',         description: 'Feedforward, depth vs width, MLP parameter count' },
     ],
   },
-  'classical-ml': {
-    title: 'Classical ML',
-    description: 'Decision trees, SVMs, ensemble methods, and dimensionality reduction.',
+  'regression': {
+    title: 'Regression',
+    description: 'Supervised learning fundamentals — from ordinary least squares to logistic regression and cross-entropy.',
     lessons: [
-      { slug: '09-decision-trees', title: 'Decision Trees', description: 'Information gain, Gini impurity, pruning' },
-      { slug: '10-svms', title: 'Support Vector Machines', description: 'Margin maximization, kernel trick, soft margin' },
-      { slug: '11-clustering', title: 'Clustering', description: 'K-means, DBSCAN, hierarchical clustering' },
-      { slug: '12-dimensionality-reduction', title: 'Dimensionality Reduction', description: 'PCA, t-SNE, UMAP — visualizing high-dimensional data' },
+      { slug: '07-linear-regression', title: 'Linear Regression',                       description: 'MSE loss, normal equation, R², gradient descent vs closed form' },
+      { slug: '08-logistic-softmax',  title: 'Logistic Regression, CrossEntropy & Softmax', description: 'Sigmoid, binary cross-entropy, gradient derivation, softmax multiclass' },
     ],
   },
-  'deep-learning': {
-    title: 'Deep Learning',
-    description: 'Neural networks from scratch — forward pass, backpropagation, CNNs, and sequence models.',
+  'optimization': {
+    title: 'Optimization',
+    description: 'Everything about training neural networks: backprop, curvature, optimizers, learning rate schedules, and regularization.',
     lessons: [
-      { slug: '13-neural-networks', title: 'Neural Networks', description: 'Perceptrons, activation functions, universal approximation' },
-      { slug: '14-backpropagation', title: 'Backpropagation', description: 'Compute graphs, chain rule, from-scratch NumPy implementation' },
-      { slug: '15-cnns', title: 'Convolutional Neural Networks', description: 'Convolution, pooling, ResNet, image classification' },
-      { slug: '16-rnns-lstm', title: 'RNNs & LSTM', description: 'Sequence modeling, vanishing gradients, gated architectures' },
+      { slug: '09-backprop-compgraph', title: 'Backpropagation & Computation Graphs',   description: 'Reverse-mode autodiff, DAG, chain rule, XOR from scratch' },
+      { slug: '10-taylor-hessian',     title: 'Taylor Series, Hessian & Quadratic Surfaces', description: 'Second-order expansion, curvature, Newton\'s method' },
+      { slug: '11-optimizers',         title: 'SGD, Momentum, Nesterov, AdaGrad, RMSProp, Adam', description: 'Every major optimizer compared on Rosenbrock function' },
+      { slug: '12-lr-schedules',       title: 'Learning Rate Schedules & Batch Training', description: 'Step, cosine, warmup schedules; batch size and gradient noise' },
+      { slug: '13-gradients-reg',      title: 'Vanishing Gradients & Regularization',   description: 'Sigmoid saturation, He init, L1/L2 regularization, batch norm' },
     ],
   },
-  'transformers-llms': {
-    title: 'Transformers & LLMs',
-    description: 'The full transformer architecture — from attention to building and fine-tuning LLMs.',
+  'cnns': {
+    title: 'Convolutional Neural Networks',
+    description: 'The convolution operation and the landmark architectures that made computer vision practical.',
     lessons: [
-      { slug: '17-attention', title: 'Attention Mechanism', description: 'Scaled dot-product attention, multi-head attention, positional encoding' },
-      { slug: '18-transformer-arch', title: 'Transformer Architecture', description: 'Encoder-decoder, layer norm, feed-forward blocks' },
-      { slug: '19-bert', title: 'BERT & Masked LM', description: 'Pre-training, fine-tuning, sentence embeddings' },
-      { slug: '20-gpt', title: 'GPT & Autoregressive LMs', description: 'Causal attention, generation strategies, scaling laws' },
-      { slug: '21-rlhf', title: 'RLHF & Alignment', description: 'Reward modeling, PPO, DPO, Constitutional AI' },
-      { slug: '22-rag', title: 'RAG & Retrieval', description: 'Vector search, chunking, hybrid retrieval, re-ranking' },
-      { slug: '23-agents', title: 'LLM Agents', description: 'Tool use, ReAct, function calling, multi-agent systems' },
+      { slug: '14-convolution',       title: 'Convolution, Padding, Stride & Pooling',  description: 'Sliding filter, output size formula, Sobel edge detection, max pool' },
+      { slug: '15-cnn-architectures', title: 'LeNet → AlexNet → VGG → ResNet',          description: 'Architecture evolution, parameter counts, residual skip connections' },
+    ],
+  },
+  'autoencoders': {
+    title: 'Autoencoders & VAEs',
+    description: 'Unsupervised representation learning — compressing data into latent codes and sampling new examples.',
+    lessons: [
+      { slug: '16-autoencoders', title: 'Autoencoders',                                  description: 'Encoder-decoder, bottleneck, reconstruction loss, denoising' },
+      { slug: '17-vaes',         title: 'Variational Autoencoders — KL Divergence & ELBO', description: 'ELBO objective, KL divergence, reparameterization trick' },
+    ],
+  },
+  'rnns': {
+    title: 'Recurrent Networks',
+    description: 'Sequence modeling with recurrent architectures — from vanilla RNNs to LSTM and GRU.',
+    lessons: [
+      { slug: '18-rnns',     title: 'Recurrent Neural Networks',                         description: 'Hidden state recurrence, BPTT, vanishing gradient in RNNs' },
+      { slug: '19-lstm-gru', title: 'LSTM & GRU',                                        description: 'Cell state, forget/input/output gates, GRU update and reset gates' },
+    ],
+  },
+  'transformers': {
+    title: 'Transformers',
+    description: 'The architecture behind GPT, BERT, and every modern LLM — from embeddings to the full encoder-decoder stack.',
+    lessons: [
+      { slug: '20-embeddings',       title: 'Embeddings & Positional Encoding',          description: 'Token embeddings, sinusoidal PE, why transformers need explicit position' },
+      { slug: '21-attention',        title: 'Attention Mechanisms',                      description: 'Scaled dot-product attention, multi-head, causal masking' },
+      { slug: '22-transformer-arch', title: 'Transformer Architecture',                  description: 'FFN, LayerNorm, residual connections, Pre-LN vs Post-LN' },
+    ],
+  },
+  'generative': {
+    title: 'Generative Models',
+    description: 'State-of-the-art generative modeling — GANs and diffusion models that power image synthesis.',
+    lessons: [
+      { slug: '23-gans',      title: 'GANs — Generator, Discriminator & Training',       description: 'Minimax objective, mode collapse, Wasserstein distance' },
+      { slug: '24-diffusion', title: 'Diffusion Models — Forward/Reverse Process & Score Matching', description: 'DDPM, noise schedule, denoising objective, score matching' },
     ],
   },
 };
@@ -73,7 +103,7 @@ export default async function CoursePage({ params }: Props) {
   return (
     <main className="max-w-4xl mx-auto px-6 py-12">
       <div className="mb-10">
-        <Link href="/" className="text-sm text-gray-500 hover:text-gray-300 transition-colors">&larr; All Courses</Link>
+        <Link href="/" className="text-sm text-gray-500 hover:text-gray-300 transition-colors">&larr; All Phases</Link>
         <h1 className="text-4xl font-bold mt-4 mb-3 text-white">{course.title}</h1>
         <p className="text-gray-400 text-lg">{course.description}</p>
       </div>
