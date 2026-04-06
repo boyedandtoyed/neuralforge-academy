@@ -1,58 +1,134 @@
 # NeuralForge Academy
 
-[![Build Status](https://img.shields.io/github/actions/workflow/status/boyedandtoyed/neuralforge-academy/ci.yml?branch=main)](https://github.com/boyedandtoyed/neuralforge-academy/actions)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Python](https://img.shields.io/badge/Python-via%20Pyodide-blue)](https://pyodide.org)
-[![Next.js](https://img.shields.io/badge/Next.js-15-black)](https://nextjs.org)
+An interactive ML/DL curriculum that runs entirely in your browser. Every lesson combines
+KaTeX-rendered mathematics, live Python (NumPy) code cells powered by Pyodide (CPython WASM),
+and auto-graded quizzes — no account or installation required to learn.
 
-> An interactive ML teaching platform — every math concept paired with live TensorFlow.js, PyTorch-syntax, and NumPy implementations running entirely in your browser.
+```
+┌─────────────────────────────────────────────────────────────┐
+│  NeuralForge Academy                         [Playground ▸] │
+├─────────────────────────────────────────────────────────────┤
+│  Phase 0 · Introduction          Phase 1 · Neuron Model     │
+│  ┌─────────────────────────┐    ┌─────────────────────────┐ │
+│  │ 00 Setup                │    │ 04 Artificial Neuron    │ │
+│  │ 01 History & Biology    │    │ 05 Activation Functions │ │
+│  │ 02 Probability          │    │ 06 Network Topology     │ │
+│  │ 03 Matrix Operations    │    └─────────────────────────┘ │
+│  └─────────────────────────┘                                │
+│                                                             │
+│  [KaTeX Math]  [Live NumPy Code]  [Quiz]                    │
+└─────────────────────────────────────────────────────────────┘
+```
 
-## Features
+---
 
-- **Multi-framework editor** — NumPy (CPython via Pyodide WASM), TensorFlow.js (WebGL/WebGPU), PyTorch-syntax (ONNX Runtime Web)
-- **23 lessons** across 5 phases: Math → ML → Classical ML → Deep Learning → Transformers & LLMs
-- **Live visualizations** — D3.js 2D plots, Three.js 3D neural networks, animated loss landscapes
-- **Math rendering** — KaTeX (10× faster than MathJax)
-- **Zero backend** — all computation happens in the browser via WebAssembly
+## Installation & Running
 
-## Quick Start
+### Prerequisites
+- Node.js 18+ ([nodejs.org](https://nodejs.org))
+- Git
 
+### Quick Start
 ```bash
-git clone https://github.com/boyedandtoyed/neuralforge-academy
+# 1. Clone the repository
+git clone https://github.com/boyedandtoyed/neuralforge-academy.git
 cd neuralforge-academy
+
+# 2. Install dependencies
 npm install
+
+# 3. Start the development server
 npm run dev
-# Open http://localhost:3000
+
+# 4. Open in browser
+# Navigate to http://localhost:3000
 ```
 
-## Docker
-
+### Production Build
 ```bash
-docker compose up
+npm run build    # Creates optimized build in .next/
+npm start        # Serves production build on port 3000
 ```
 
-## Architecture
+### Docker
+```bash
+# Build and run with Docker Compose
+docker compose up --build
 
+# Or with Docker directly
+docker build -t neuralforge-academy .
+docker run -p 3000:3000 neuralforge-academy
 ```
-Browser
-├── Pyodide Web Worker    # CPython WASM — NumPy, scikit-learn, matplotlib
-├── TensorFlow.js         # WebGL/WebGPU GPU acceleration
-└── ONNX Runtime Web      # PyTorch model inference
+
+### Verify Your Build
+```bash
+npm run type-check   # TypeScript validation
+npm run lint         # ESLint check
+npm run build        # Full production build
 ```
 
-## Curriculum
+---
 
-| Phase | Topic | Lessons |
-|-------|-------|---------|
-| 0 | Math Foundations | Vectors, matrices, derivatives, probability, gradient descent |
-| 1 | ML Fundamentals | Linear/logistic regression, evaluation, bias-variance |
-| 2 | Classical ML | Decision trees, SVMs, clustering, PCA |
-| 3 | Deep Learning | Neural nets, backprop, CNNs, RNNs |
-| 4 | Transformers & LLMs | Attention, BERT, GPT, RLHF, RAG, agents |
+## Curriculum — 9 Phases, 25 Lessons
+
+| Phase | Slug | Lessons |
+|-------|------|---------|
+| **0 — Introduction** | `introduction` | 00 Python, NumPy & Matplotlib Setup · 01 History & Biological Neurons · 02 Probability & Statistics · 03 Matrix Operations |
+| **1 — Neuron Model & Architectures** | `neuron-model` | 04 The Artificial Neuron · 05 Activation / Transfer Functions · 06 Network Topology & Architectures |
+| **2 — Regression** | `regression` | 07 Linear Regression · 08 Logistic Regression, CrossEntropy & Softmax |
+| **3 — Optimization** | `optimization` | 09 Backpropagation & Computation Graphs · 10 Taylor Series, Hessian & Quadratic Surfaces · 11 SGD, Momentum, Nesterov, AdaGrad, RMSProp, Adam · 12 Learning Rate Schedules & Batch Training · 13 Vanishing Gradients & Regularization |
+| **4 — Convolutional Neural Networks** | `cnns` | 14 Convolution, Padding, Stride & Pooling · 15 LeNet → AlexNet → VGG → ResNet |
+| **5 — Autoencoders & VAEs** | `autoencoders` | 16 Autoencoders · 17 Variational Autoencoders — KL Divergence & ELBO |
+| **6 — Recurrent Networks** | `rnns` | 18 Recurrent Neural Networks · 19 LSTM & GRU |
+| **7 — Transformers** | `transformers` | 20 Embeddings & Positional Encoding · 21 Attention Mechanisms · 22 Transformer Architecture |
+| **8 — Generative Models** | `generative` | 23 GANs — Generator, Discriminator & Training · 24 Diffusion Models — Forward/Reverse Process & Score Matching |
+
+Each lesson contains:
+- **Prose** — clear conceptual explanations
+- **KaTeX math** — rendered display equations
+- **NumPy code** — runnable via Pyodide in the browser
+- **Quiz** — 4-option multiple-choice with explanations
+
+---
 
 ## Tech Stack
 
-Next.js 15 · React 19 · TypeScript 5.7 · Pyodide 0.26 · TensorFlow.js 4.22 · D3.js 7.9 · Three.js · KaTeX · Tailwind CSS
+| Layer | Technology |
+|-------|-----------|
+| Framework | Next.js 15 (App Router, static export) |
+| UI | React 19, Tailwind CSS |
+| Language | TypeScript 5 |
+| Math rendering | KaTeX via react-katex |
+| In-browser Python | Pyodide 0.26 (CPython WASM) |
+| Code editor | CodeMirror 6 |
+| Visualizations | D3.js, Three.js |
+| State management | Zustand |
+| Containerization | Docker / Docker Compose |
+
+---
+
+## Project Structure
+
+```
+src/
+  app/
+    page.tsx                          # Homepage — 9-phase grid
+    courses/
+      [courseSlug]/
+        page.tsx                      # Phase overview with lesson list
+        [lessonSlug]/
+          page.tsx                    # Individual lesson page
+  lib/
+    lessonData.ts                     # COURSE_TITLES, COURSE_LESSONS, LESSON_CONTENT
+  components/
+    lesson/
+      LessonLayout.tsx                # Sidebar + content shell
+      LessonContent.tsx               # Renders prose, math, code, quiz sections
+    editor/                           # Pyodide code runner
+    visualizations/                   # D3 / Three.js widgets
+```
+
+---
 
 ## License
 
