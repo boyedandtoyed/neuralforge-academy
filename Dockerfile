@@ -4,7 +4,7 @@ WORKDIR /app
 COPY package*.json ./
 
 FROM base AS deps
-RUN npm ci --only=production
+RUN npm ci --omit=dev
 
 FROM base AS builder
 RUN npm ci
