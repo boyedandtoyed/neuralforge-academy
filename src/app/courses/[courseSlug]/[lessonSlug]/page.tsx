@@ -36,7 +36,7 @@ export default async function LessonPage({ params }: Props) {
       currentLesson={lessonSlug}
       lessons={lessons}
     >
-      <LessonContent content={content} lessonTitle={lessonMeta.title} />
+      <LessonContent content={content} lessonTitle={lessonMeta.title} lessonKey={`${courseSlug}/${lessonSlug}`} />
     </LessonLayout>
   );
 }

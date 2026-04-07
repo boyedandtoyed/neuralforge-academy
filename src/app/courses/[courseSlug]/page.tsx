@@ -1,5 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import CourseProgressBadge from '@/components/progress/CourseProgressBadge';
+import LessonCompletedDot from '@/components/progress/LessonCompletedDot';
 
 const COURSES: Record<string, {
   title: string;
@@ -104,7 +106,10 @@ export default async function CoursePage({ params }: Props) {
     <main className="max-w-4xl mx-auto px-6 py-12">
       <div className="mb-10">
         <Link href="/" className="text-sm text-gray-500 hover:text-gray-300 transition-colors">&larr; All Phases</Link>
-        <h1 className="text-4xl font-bold mt-4 mb-3 text-white">{course.title}</h1>
+        <div className="flex items-center gap-3 mt-4 mb-3">
+          <h1 className="text-4xl font-bold text-white">{course.title}</h1>
+          <CourseProgressBadge courseSlug={courseSlug} lessonSlugs={course.lessons.map(l => l.slug)} />
+        </div>
         <p className="text-gray-400 text-lg">{course.description}</p>
       </div>
       <div className="space-y-3">
@@ -121,6 +126,7 @@ export default async function CoursePage({ params }: Props) {
               <h2 className="font-semibold text-white group-hover:text-blue-400 transition-colors">{lesson.title}</h2>
               <p className="text-sm text-gray-400 mt-0.5">{lesson.description}</p>
             </div>
+            <LessonCompletedDot lessonKey={`${courseSlug}/${lesson.slug}`} />
             <svg className="w-5 h-5 text-gray-600 group-hover:text-blue-400 transition-colors shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
             </svg>

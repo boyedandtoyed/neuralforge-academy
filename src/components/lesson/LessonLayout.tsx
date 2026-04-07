@@ -1,6 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { useState } from 'react';
+import { useProgressStore } from '@/stores/progressStore';
 
 interface Lesson {
   slug: string;
@@ -20,6 +21,9 @@ export default function LessonLayout({ courseSlug, courseTitle, currentLesson, l
   const currentIndex = lessons.findIndex(l => l.slug === currentLesson);
   const prev = lessons[currentIndex - 1];
   const next = lessons[currentIndex + 1];
+  const lessonProgress = useProgressStore((s) => s.lessons);
+
+  const completed = lessons.filter(l => lessonProgress[`${courseSlug}/${l.slug}`]?.completed).length;
 
   return (
     <div className="flex min-h-screen">
@@ -38,24 +42,39 @@ export default function LessonLayout({ courseSlug, courseTitle, currentLesson, l
           <Link href={`/courses/${courseSlug}`} className="text-xs text-gray-500 hover:text-gray-300 transition-colors">
             &larr; {courseTitle}
           </Link>
+          {completed > 0 && (
+            <div className="mt-2 text-xs text-gray-500">
+              <span className="text-green-400 font-medium">{completed}</span>/{lessons.length} completed
+            </div>
+          )}
         </div>
         <nav className="flex-1 p-2">
-          {lessons.map((lesson, i) => (
-            <Link
-              key={lesson.slug}
-              href={`/courses/${courseSlug}/${lesson.slug}`}
-              onClick={() => setSidebarOpen(false)}
-              className={`
-                flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors mb-0.5
-                ${currentLesson === lesson.slug
-                  ? 'bg-blue-600/20 text-blue-400 border border-blue-600/30'
-                  : 'text-gray-400 hover:text-gray-200 hover:bg-gray-800'}
-              `}
-            >
-              <span className="text-xs font-mono text-gray-600 w-5 shrink-0">{String(i + 1).padStart(2, '0')}</span>
-              <span className="truncate">{lesson.title}</span>
-            </Link>
-          ))}
+          {lessons.map((lesson, i) => {
+            const key = `${courseSlug}/${lesson.slug}`;
+            const isCompleted = lessonProgress[key]?.completed ?? false;
+            const isCurrent = currentLesson === lesson.slug;
+            return (
+              <Link
+                key={lesson.slug}
+                href={`/courses/${courseSlug}/${lesson.slug}`}
+                onClick={() => setSidebarOpen(false)}
+                className={`
+                  flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors mb-0.5
+                  ${isCurrent
+                    ? 'bg-blue-600/20 text-blue-400 border border-blue-600/30'
+                    : 'text-gray-400 hover:text-gray-200 hover:bg-gray-800'}
+                `}
+              >
+                <span className="text-xs font-mono text-gray-600 w-5 shrink-0">{String(i + 1).padStart(2, '0')}</span>
+                <span className="truncate flex-1">{lesson.title}</span>
+                {isCompleted && (
+                  <svg className="w-4 h-4 text-green-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                )}
+              </Link>
+            );
+          })}
         </nav>
       </aside>
 

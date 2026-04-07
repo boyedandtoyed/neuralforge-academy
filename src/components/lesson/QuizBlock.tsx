@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import { useProgressStore } from '@/stores/progressStore';
 
 interface QuizOption {
   label: string;
@@ -10,15 +11,25 @@ interface QuizBlockProps {
   question: string;
   options: QuizOption[];
   explanation: string;
+  lessonKey?: string;
 }
 
-export default function QuizBlock({ question, options, explanation }: QuizBlockProps) {
+export default function QuizBlock({ question, options, explanation, lessonKey }: QuizBlockProps) {
   const [selected, setSelected] = useState<number | null>(null);
   const [revealed, setRevealed] = useState(false);
+  const markQuizPassed = useProgressStore((s) => s.markQuizPassed);
 
   const handleSelect = (i: number) => {
     if (revealed) return;
     setSelected(i);
+  };
+
+  const handleCheck = () => {
+    setRevealed(true);
+    const isCorrect = selected !== null && options[selected]?.correct;
+    if (isCorrect && lessonKey) {
+      markQuizPassed(lessonKey);
+    }
   };
 
   return (
@@ -51,7 +62,7 @@ export default function QuizBlock({ question, options, explanation }: QuizBlockP
       </div>
       {selected !== null && !revealed && (
         <button
-          onClick={() => setRevealed(true)}
+          onClick={handleCheck}
           className="mt-4 text-sm bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg transition-colors"
         >
           Check Answer

@@ -1,10 +1,11 @@
 import Link from 'next/link';
+import CourseProgressBadge from '@/components/progress/CourseProgressBadge';
 
 const phases = [
   {
     slug: 'introduction',
     title: 'Introduction',
-    lessons: 4,
+    lessonSlugs: ['00-setup', '01-history-biology', '02-probability', '03-matrix-ops'],
     icon: '⚡',
     phase: 0,
     description: 'Python & NumPy setup, biological neurons, probability theory, and matrix operations',
@@ -12,7 +13,7 @@ const phases = [
   {
     slug: 'neuron-model',
     title: 'Neuron Model & Architectures',
-    lessons: 3,
+    lessonSlugs: ['04-single-neuron', '05-activation-fns', '06-network-topology'],
     icon: '🧬',
     phase: 1,
     description: 'The artificial neuron, activation functions (ReLU, GELU, softmax), and network topologies',
@@ -20,7 +21,7 @@ const phases = [
   {
     slug: 'regression',
     title: 'Regression',
-    lessons: 2,
+    lessonSlugs: ['07-linear-regression', '08-logistic-softmax'],
     icon: '📈',
     phase: 2,
     description: 'Linear regression, logistic regression, cross-entropy loss, and softmax classifier',
@@ -28,7 +29,7 @@ const phases = [
   {
     slug: 'optimization',
     title: 'Optimization',
-    lessons: 5,
+    lessonSlugs: ['09-backprop-compgraph', '10-taylor-hessian', '11-optimizers', '12-lr-schedules', '13-gradients-reg'],
     icon: '∇',
     phase: 3,
     description: 'Backprop, Hessians, SGD → Adam, LR schedules, vanishing gradients & regularization',
@@ -36,7 +37,7 @@ const phases = [
   {
     slug: 'cnns',
     title: 'Convolutional Neural Networks',
-    lessons: 2,
+    lessonSlugs: ['14-convolution', '15-cnn-architectures'],
     icon: '🖼',
     phase: 4,
     description: 'Convolution, pooling, padding/stride, and landmark architectures LeNet → ResNet',
@@ -44,7 +45,7 @@ const phases = [
   {
     slug: 'autoencoders',
     title: 'Autoencoders & VAEs',
-    lessons: 2,
+    lessonSlugs: ['16-autoencoders', '17-vaes'],
     icon: '🔁',
     phase: 5,
     description: 'Bottleneck autoencoders, variational autoencoders, ELBO, and the reparameterization trick',
@@ -52,7 +53,7 @@ const phases = [
   {
     slug: 'rnns',
     title: 'Recurrent Networks',
-    lessons: 2,
+    lessonSlugs: ['18-rnns', '19-lstm-gru'],
     icon: '🔄',
     phase: 6,
     description: 'Sequence modeling, backprop through time, LSTM gating, and GRU',
@@ -60,7 +61,7 @@ const phases = [
   {
     slug: 'transformers',
     title: 'Transformers',
-    lessons: 3,
+    lessonSlugs: ['20-embeddings', '21-attention', '22-transformer-arch'],
     icon: '🤖',
     phase: 7,
     description: 'Positional encodings, scaled dot-product attention, multi-head attention, full architecture',
@@ -68,7 +69,7 @@ const phases = [
   {
     slug: 'generative',
     title: 'Generative Models',
-    lessons: 2,
+    lessonSlugs: ['23-gans', '24-diffusion'],
     icon: '✨',
     phase: 8,
     description: 'GAN minimax training, mode collapse, DDPM diffusion forward/reverse process & score matching',
@@ -128,12 +129,15 @@ export default function HomePage() {
               <div className="flex items-start justify-between mb-4">
                 <span className="text-4xl">{phase.icon}</span>
                 <span className="text-xs text-gray-500 bg-gray-800 px-2 py-1 rounded-full">
-                  Phase {phase.phase} &middot; {phase.lessons} lesson{phase.lessons !== 1 ? 's' : ''}
+                  Phase {phase.phase} &middot; {phase.lessonSlugs.length} lesson{phase.lessonSlugs.length !== 1 ? 's' : ''}
                 </span>
               </div>
-              <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-blue-400 transition-colors">
-                {phase.title}
-              </h3>
+              <div className="flex items-center gap-2 mb-2">
+                <h3 className="text-lg font-semibold text-white group-hover:text-blue-400 transition-colors">
+                  {phase.title}
+                </h3>
+                <CourseProgressBadge courseSlug={phase.slug} lessonSlugs={phase.lessonSlugs} />
+              </div>
               <p className="text-sm text-gray-400">{phase.description}</p>
             </Link>
           ))}
