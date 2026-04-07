@@ -2,18 +2,18 @@
 import { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 
+const W = 400;
+const H = 400;
+const CX = W / 2;
+const CY = H / 2;
+const SCALE = 50;
+
 export default function VectorField() {
   const svgRef = useRef<SVGSVGElement>(null);
   const [aX, setAX] = useState(3);
   const [aY, setAY] = useState(1);
   const [bX, setBX] = useState(1);
   const [bY, setBY] = useState(3);
-
-  const W = 400;
-  const H = 400;
-  const CX = W / 2;
-  const CY = H / 2;
-  const SCALE = 50;
 
   useEffect(() => {
     const svg = d3.select(svgRef.current);
@@ -71,7 +71,7 @@ export default function VectorField() {
       .attr('x', 10).attr('y', H - 30)
       .attr('fill', '#9ca3af').attr('font-size', 12)
       .text(`a·b = ${dot.toFixed(1)}   cos(θ) = ${cosTheta.toFixed(3)}`);
-  }, [aX, aY, bX, bY, CX, CY, SCALE, H, W]);
+  }, [aX, aY, bX, bY]);
 
   interface SliderProps {
     label: string;

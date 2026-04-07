@@ -2,6 +2,11 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import * as d3 from 'd3';
 
+const W = 400;
+const H = 320;
+const xScale = d3.scaleLinear([-5, 5], [20, W - 20]);
+const yScale = d3.scaleLinear([-1, 25], [H - 20, 20]);
+
 export default function GradientDescent2D() {
   const svgRef = useRef<SVGSVGElement>(null);
   const [lr, setLr] = useState(0.1);
@@ -11,11 +16,6 @@ export default function GradientDescent2D() {
   const animRef = useRef<number | null>(null);
   const posRef = useRef(pos);
   posRef.current = pos;
-
-  const W = 400;
-  const H = 320;
-  const xScale = d3.scaleLinear([-5, 5], [20, W - 20]);
-  const yScale = d3.scaleLinear([-1, 25], [H - 20, 20]);
 
   const f = useCallback((x: number) => 0.1 * x * x * x * x - 2 * x * x + 0.5 * x + 5, []);
   const df = useCallback((x: number) => 0.4 * x * x * x - 4 * x + 0.5, []);
@@ -54,7 +54,7 @@ export default function GradientDescent2D() {
     svg.append('text').attr('x', W - 25).attr('y', 18)
       .attr('text-anchor', 'end').attr('fill', '#9ca3af').attr('font-size', 11)
       .text(`f(x) = ${f(posRef.current.x).toFixed(3)}`);
-  }, [pos, f, df, xScale, yScale, W, H]);
+  }, [pos, f, df]);
 
   const doStep = useCallback(() => {
     setPos(p => {
