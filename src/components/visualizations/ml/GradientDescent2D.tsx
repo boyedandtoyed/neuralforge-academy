@@ -91,7 +91,7 @@ export default function GradientDescent2D() {
       <svg ref={svgRef} width={W} height={H} className="rounded-xl w-full" style={{ background: '#090916' }} />
       <div className="mt-3 flex flex-wrap items-center gap-4">
         <div className="flex items-center gap-2 flex-1 min-w-40">
-          <label className="text-xs text-gray-400 whitespace-nowrap">LR: {lr.toFixed(3)}</label>
+          <label className="text-xs text-slate-400 whitespace-nowrap">LR: {lr.toFixed(3)}</label>
           <input type="range" min={0.001} max={0.5} step={0.001} value={lr}
             onChange={e => setLr(Number(e.target.value))}
             className="flex-1 accent-blue-500" />
@@ -112,7 +112,7 @@ export default function GradientDescent2D() {
             style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.08)' }}>
             Reset
           </button>
-          <span className="text-xs text-gray-500">step {step} | x={pos.x.toFixed(3)}</span>
+          <span className="text-xs text-slate-500">step {step} | x={pos.x.toFixed(3)}</span>
         </div>
       </div>
     </div>

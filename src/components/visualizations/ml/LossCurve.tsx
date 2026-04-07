@@ -109,7 +109,7 @@ export default function LossCurve({ maxEpochs = 100 }: LossCurveProps) {
             className="accent-blue-500" />
           Simulate overfitting
         </label>
-        <span className="text-xs text-gray-500 ml-auto">epoch {epoch}/{maxEpochs}</span>
+        <span className="text-xs text-slate-500 ml-auto">epoch {epoch}/{maxEpochs}</span>
       </div>
     </div>
   );

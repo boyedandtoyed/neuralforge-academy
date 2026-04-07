@@ -142,6 +142,7 @@ _buf.getvalue()
 `;
     const blob = new Blob([workerCode], { type: 'text/javascript' });
     const worker = new Worker(URL.createObjectURL(blob));
+
     worker.onmessage = (e) => {
       if (e.data.type === 'status') {
         setOutput(e.data.msg);
@@ -155,21 +156,34 @@ _buf.getvalue()
         setOutput(`Error:\n${error}`);
       }
     };
+
+    // If the worker crashes (e.g. CDN 404, WASM error), reset the run button
+    // so the user is never stuck in "Running…" forever.
+    worker.onerror = (err) => {
+      setIsRunning(false);
+      setOutput(`Worker error: ${err.message ?? 'Failed to initialize Python runtime.'}\n\nCheck your network connection and try again.`);
+    };
+
     workerRef.current = worker;
     return worker;
   }, []);
 
   const handleRun = async () => {
-    setIsRunning(true);
-    const currentCode = code[activeTab];
+    const currentCode = code[activeTab].trim();
+
+    // Guard: don't submit empty code
+    if (!currentCode) {
+      setOutput('Nothing to run — write some code first.');
+      return;
+    }
 
     if (activeTab === 'tensorflow') {
-      setIsRunning(false);
       setOutput('TensorFlow.js runs in the browser GPU context.\nCopy this code to the browser console after importing TF.js.\n\nFor full in-browser execution, use the NumPy tab which runs CPython via Pyodide WASM.');
       return;
     }
 
-    setOutput('Initializing Python runtime...');
+    setIsRunning(true);
+    setOutput('Initializing Python runtime…');
     const worker = getWorker();
     const id = Math.random().toString(36).slice(2);
     worker.postMessage({ id, code: currentCode });
@@ -183,8 +197,11 @@ _buf.getvalue()
             <TabsList className="flex gap-1 py-2">
               {(['numpy', 'tensorflow', 'pytorch'] as Framework[]).map(tab => (
                 <TabsTrigger key={tab} value={tab}
-                  className="px-3 py-1.5 text-sm rounded-lg transition-colors data-[state=active]:text-white text-slate-500 hover:text-slate-300"
-                  style={{ background: 'transparent' }}
+                  className="px-3 py-1.5 text-sm rounded-lg transition-all
+                    data-[state=active]:text-white data-[state=active]:bg-white/10
+                    data-[state=active]:border-white/10
+                    text-slate-500 hover:text-slate-300"
+                  style={{ border: '1px solid transparent' }}
                 >
                   {tab === 'numpy' ? 'NumPy' : tab === 'tensorflow' ? 'TensorFlow.js' : 'PyTorch'}
                 </TabsTrigger>
@@ -207,7 +224,7 @@ _buf.getvalue()
             style={{ background: 'linear-gradient(135deg,#2563eb,#7c3aed)' }}>
             {isRunning ? '\u27F3 Running...' : '\u25B6 Run'}
           </button>
-          <span className="text-xs text-gray-500">
+          <span className="text-xs text-slate-500">
             {activeTab === 'numpy' ? 'CPython via Pyodide WASM' : activeTab === 'tensorflow' ? 'WebGL/WebGPU accelerated' : 'NumPy PyTorch-syntax via Pyodide'}
           </span>
         </div>

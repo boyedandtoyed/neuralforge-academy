@@ -81,11 +81,11 @@ export default function VectorField() {
 
   const Slider = ({ label, value, onChange }: SliderProps) => (
     <div className="flex items-center gap-3">
-      <span className="text-xs text-gray-400 w-8 font-mono">{label}</span>
+      <span className="text-xs text-slate-400 w-8 font-mono">{label}</span>
       <input type="range" min={-4} max={4} step={0.5} value={value}
         onChange={e => onChange(Number(e.target.value))}
         className="flex-1 accent-blue-500" />
-      <span className="text-xs text-gray-300 w-6 text-right font-mono">{value}</span>
+      <span className="text-xs text-slate-300 w-6 text-right font-mono">{value}</span>
     </div>
   );
 
@@ -95,10 +95,10 @@ export default function VectorField() {
       <div className="flex flex-col lg:flex-row gap-4 items-start">
         <svg ref={svgRef} width={W} height={H} className="rounded-xl shrink-0" style={{ background: '#090916' }} />
         <div className="flex-1 space-y-3 w-full">
-          <p className="text-xs text-gray-500 mb-2">Vector a (blue)</p>
+          <p className="text-xs text-slate-500 mb-2">Vector a (blue)</p>
           <Slider label="ax" value={aX} onChange={setAX} />
           <Slider label="ay" value={aY} onChange={setAY} />
-          <p className="text-xs text-gray-500 mt-4 mb-2">Vector b (green)</p>
+          <p className="text-xs text-slate-500 mt-4 mb-2">Vector b (green)</p>
           <Slider label="bx" value={bX} onChange={setBX} />
           <Slider label="by" value={bY} onChange={setBY} />
           <div className="mt-4 rounded-xl p-3 text-xs font-mono text-slate-300 space-y-1" style={{ background: '#090916', border: '1px solid rgba(255,255,255,0.07)' }}>
