@@ -1,13 +1,13 @@
 FROM node:22-alpine AS base
 
 WORKDIR /app
-COPY package*.json .npmrc ./
+COPY package*.json ./
 
 FROM base AS deps
-RUN npm ci --omit=dev
+RUN npm ci --omit=dev --legacy-peer-deps
 
 FROM base AS builder
-RUN npm ci
+RUN npm ci --legacy-peer-deps
 COPY . .
 RUN npm run build
 
