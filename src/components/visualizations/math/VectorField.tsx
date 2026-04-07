@@ -90,10 +90,10 @@ export default function VectorField() {
   );
 
   return (
-    <div className="bg-gray-900 rounded-xl border border-gray-800 p-4 my-6">
+    <div className="rounded-2xl p-4 my-6" style={{ background: 'var(--bg-surface)', border: '1px solid rgba(255,255,255,0.08)' }}>
       <h4 className="text-sm font-semibold text-white mb-3">Interactive: Vector Addition &amp; Dot Product</h4>
       <div className="flex flex-col lg:flex-row gap-4 items-start">
-        <svg ref={svgRef} width={W} height={H} className="rounded-lg bg-gray-950 shrink-0" />
+        <svg ref={svgRef} width={W} height={H} className="rounded-xl shrink-0" style={{ background: '#090916' }} />
         <div className="flex-1 space-y-3 w-full">
           <p className="text-xs text-gray-500 mb-2">Vector a (blue)</p>
           <Slider label="ax" value={aX} onChange={setAX} />
@@ -101,7 +101,7 @@ export default function VectorField() {
           <p className="text-xs text-gray-500 mt-4 mb-2">Vector b (green)</p>
           <Slider label="bx" value={bX} onChange={setBX} />
           <Slider label="by" value={bY} onChange={setBY} />
-          <div className="mt-4 bg-gray-800 rounded-lg p-3 text-xs font-mono text-gray-300 space-y-1">
+          <div className="mt-4 rounded-xl p-3 text-xs font-mono text-slate-300 space-y-1" style={{ background: '#090916', border: '1px solid rgba(255,255,255,0.07)' }}>
             <div>a = [{aX}, {aY}]</div>
             <div>b = [{bX}, {bY}]</div>
             <div>a+b = [{aX+bX}, {aY+bY}]</div>

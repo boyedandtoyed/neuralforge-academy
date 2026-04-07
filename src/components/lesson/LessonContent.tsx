@@ -70,50 +70,75 @@ interface LessonContentProps {
 
 export default function LessonContent({ content, lessonTitle, lessonKey }: LessonContentProps) {
   const markComplete = useProgressStore((s) => s.markComplete);
-  // Select primitives to avoid stale object references causing re-renders
   const lessonCompleted = useProgressStore((s) => lessonKey ? (s.lessons[lessonKey]?.completed ?? false) : false);
   const quizPassed = useProgressStore((s) => lessonKey ? (s.lessons[lessonKey]?.quizPassed ?? false) : false);
   const visualizers = lessonKey ? (VISUALIZERS[lessonKey] ?? []) : [];
 
   if (!content) {
     return (
-      <div className="py-16 text-center">
-        <div className="text-5xl mb-4">&#128679;</div>
-        <h1 className="text-2xl font-bold text-white mb-2">{lessonTitle}</h1>
-        <p className="text-gray-400">This lesson is coming soon. Check back shortly!</p>
+      <div className="py-20 text-center">
+        <div className="text-5xl mb-5">🚧</div>
+        <h1 className="text-2xl font-bold text-white mb-3">{lessonTitle}</h1>
+        <p className="text-slate-400">This lesson is coming soon. Check back shortly!</p>
       </div>
     );
   }
 
   return (
     <>
-      <h1 className="text-3xl font-bold text-white mb-8">{lessonTitle}</h1>
+      {/* Lesson title */}
+      <h1 className="text-3xl font-bold text-white mb-8 leading-tight">{lessonTitle}</h1>
+
+      {/* Content sections */}
       {content.map((section, i) => {
         switch (section.type) {
           case 'prose':
             return (
-              <p key={i} className="text-gray-300 leading-relaxed mb-5"
+              <p
+                key={i}
+                className="text-slate-300 leading-[1.8] mb-5 text-[15px]"
                 dangerouslySetInnerHTML={{ __html: renderInlineMarkdown(section.content ?? '') }}
               />
             );
+
           case 'heading':
-            if (section.level === 2) return <h2 key={i} className="text-xl font-bold text-white mt-10 mb-4">{section.content}</h2>;
-            if (section.level === 3) return <h3 key={i} className="text-lg font-semibold text-white mt-8 mb-3">{section.content}</h3>;
-            return <h4 key={i} className="font-semibold text-white mt-6 mb-2">{section.content}</h4>;
+            if (section.level === 2)
+              return (
+                <h2
+                  key={i}
+                  className="text-xl font-bold text-white mt-12 mb-4 pb-3"
+                  style={{ borderBottom: '1px solid rgba(255,255,255,0.07)' }}
+                >
+                  {section.content}
+                </h2>
+              );
+            if (section.level === 3)
+              return <h3 key={i} className="text-lg font-semibold text-white mt-8 mb-3">{section.content}</h3>;
+            return <h4 key={i} className="font-semibold text-slate-200 mt-6 mb-2">{section.content}</h4>;
+
           case 'math':
             return <MathBlock key={i} math={section.content ?? ''} display={section.display} />;
+
           case 'code':
             return (
-              <div key={i} className="my-6 rounded-xl overflow-hidden border border-gray-700">
-                <div className="flex items-center justify-between bg-gray-800 px-4 py-2 border-b border-gray-700">
-                  <span className="text-xs text-gray-400 font-mono">{section.language ?? 'python'}</span>
-                  <span className="text-xs text-gray-500">live-editable in Playground &rarr;</span>
+              <div key={i} className="my-7 rounded-xl overflow-hidden" style={{ border: '1px solid rgba(255,255,255,0.09)' }}>
+                <div
+                  className="flex items-center justify-between px-4 py-2.5"
+                  style={{ background: '#11112a', borderBottom: '1px solid rgba(255,255,255,0.07)' }}
+                >
+                  <span className="text-xs font-medium font-mono px-2 py-0.5 rounded"
+                    style={{ color: '#93c5fd', background: 'rgba(59,130,246,0.12)' }}>
+                    {section.language ?? 'python'}
+                  </span>
+                  <span className="text-xs text-slate-600">editable in Playground →</span>
                 </div>
-                <pre className="bg-gray-900 p-4 overflow-x-auto text-sm text-gray-200 font-mono leading-relaxed">
+                <pre className="p-5 overflow-x-auto text-sm leading-relaxed"
+                  style={{ background: '#090916', color: '#e2e8f0', fontFamily: "'JetBrains Mono', 'Fira Code', monospace" }}>
                   <code>{section.content}</code>
                 </pre>
               </div>
             );
+
           case 'quiz':
             return (
               <QuizBlock
@@ -124,6 +149,7 @@ export default function LessonContent({ content, lessonTitle, lessonKey }: Lesso
                 lessonKey={lessonKey}
               />
             );
+
           default:
             return null;
         }
@@ -131,25 +157,34 @@ export default function LessonContent({ content, lessonTitle, lessonKey }: Lesso
 
       {/* External visualizers */}
       {visualizers.length > 0 && (
-        <div className="mt-12 p-6 bg-gray-900 border border-gray-700 rounded-xl">
-          <h3 className="text-sm font-semibold text-purple-400 uppercase tracking-wider mb-4">
+        <div
+          className="mt-12 p-6 rounded-2xl"
+          style={{ background: 'rgba(139,92,246,0.06)', border: '1px solid rgba(139,92,246,0.2)' }}
+        >
+          <h3 className="text-xs font-semibold uppercase tracking-widest mb-4" style={{ color: '#a78bfa' }}>
             Interactive Visualizers
           </h3>
-          <div className="space-y-3">
+          <div className="space-y-2.5">
             {visualizers.map((v) => (
               <a
                 key={v.url}
                 href={v.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-start gap-3 group p-3 rounded-lg border border-gray-800 hover:border-purple-500/50 hover:bg-purple-500/5 transition-all"
+                className="flex items-start gap-3 group p-3 rounded-xl transition-all"
+                style={{ border: '1px solid rgba(139,92,246,0.15)', background: 'rgba(139,92,246,0.04)' }}
               >
-                <svg className="w-4 h-4 text-purple-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                <svg
+                  width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                  className="mt-0.5 shrink-0" style={{ color: '#a78bfa' }}
+                >
+                  <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6" />
+                  <polyline points="15 3 21 3 21 9" /><line x1="10" y1="14" x2="21" y2="3" />
                 </svg>
                 <div>
-                  <div className="text-sm font-medium text-white group-hover:text-purple-300 transition-colors">{v.title}</div>
-                  <div className="text-xs text-gray-400 mt-0.5">{v.description}</div>
+                  <div className="text-sm font-medium text-slate-200 group-hover:text-white transition-colors">{v.title}</div>
+                  <div className="text-xs text-slate-500 mt-0.5">{v.description}</div>
                 </div>
               </a>
             ))}
@@ -157,29 +192,43 @@ export default function LessonContent({ content, lessonTitle, lessonKey }: Lesso
         </div>
       )}
 
-      {/* Mark Complete button */}
+      {/* Mark Complete */}
       {lessonKey && (
-        <div className="mt-10 pt-8 border-t border-gray-800 flex items-center gap-4">
+        <div className="mt-12 pt-8 flex items-center gap-4" style={{ borderTop: '1px solid rgba(255,255,255,0.08)' }}>
           {lessonCompleted ? (
-            <div className="flex items-center gap-2 text-green-400 text-sm font-medium">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
+            <div className="flex items-center gap-2.5 text-sm font-medium" style={{ color: '#4ade80' }}>
+              <span
+                className="w-7 h-7 rounded-full flex items-center justify-center"
+                style={{ background: 'rgba(74,222,128,0.12)', border: '1px solid rgba(74,222,128,0.25)' }}
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              </span>
               Lesson completed
             </div>
           ) : (
             <button
               onClick={() => markComplete(lessonKey)}
-              className="flex items-center gap-2 text-sm bg-green-600 hover:bg-green-500 text-white font-medium px-5 py-2.5 rounded-lg transition-colors"
+              className="flex items-center gap-2 text-sm font-semibold text-white px-5 py-2.5 rounded-xl transition-all hover:opacity-90 hover:scale-[1.02] active:scale-95"
+              style={{
+                background: 'linear-gradient(135deg, #16a34a, #15803d)',
+                boxShadow: '0 0 20px rgba(22,163,74,0.3)',
+              }}
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="20 6 9 17 4 12" />
               </svg>
               Mark as Complete
             </button>
           )}
           {quizPassed && !lessonCompleted && (
-            <span className="text-xs text-blue-400">Quiz passed — mark complete when ready</span>
+            <span
+              className="text-xs px-3 py-1 rounded-full"
+              style={{ color: '#60a5fa', background: 'rgba(59,130,246,0.1)', border: '1px solid rgba(59,130,246,0.2)' }}
+            >
+              Quiz passed — mark complete when ready
+            </span>
           )}
         </div>
       )}
@@ -187,9 +236,8 @@ export default function LessonContent({ content, lessonTitle, lessonKey }: Lesso
   );
 }
 
-// Simple inline markdown: **bold**, `code`
 function renderInlineMarkdown(text: string): string {
   return text
-    .replace(/\*\*(.*?)\*\*/g, '<strong class="text-white font-semibold">$1</strong>')
-    .replace(/`([^`]+)`/g, '<code class="bg-gray-800 text-blue-300 px-1.5 py-0.5 rounded text-sm font-mono">$1</code>');
+    .replace(/\*\*(.*?)\*\*/g, '<strong style="color:#f1f5f9;font-weight:600">$1</strong>')
+    .replace(/`([^`]+)`/g, '<code style="background:rgba(59,130,246,0.1);color:#93c5fd;padding:2px 6px;border-radius:4px;font-size:0.85em;font-family:\'JetBrains Mono\',monospace;border:1px solid rgba(59,130,246,0.18)">$1</code>');
 }

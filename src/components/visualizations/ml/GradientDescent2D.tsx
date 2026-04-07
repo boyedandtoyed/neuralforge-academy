@@ -86,9 +86,9 @@ export default function GradientDescent2D() {
   };
 
   return (
-    <div className="bg-gray-900 rounded-xl border border-gray-800 p-4 my-6">
+    <div className="rounded-2xl p-4 my-6" style={{ background: 'var(--bg-surface)', border: '1px solid rgba(255,255,255,0.08)' }}>
       <h4 className="text-sm font-semibold text-white mb-3">Interactive: Gradient Descent</h4>
-      <svg ref={svgRef} width={W} height={H} className="rounded-lg bg-gray-950 w-full" />
+      <svg ref={svgRef} width={W} height={H} className="rounded-xl w-full" style={{ background: '#090916' }} />
       <div className="mt-3 flex flex-wrap items-center gap-4">
         <div className="flex items-center gap-2 flex-1 min-w-40">
           <label className="text-xs text-gray-400 whitespace-nowrap">LR: {lr.toFixed(3)}</label>
@@ -98,14 +98,18 @@ export default function GradientDescent2D() {
         </div>
         <div className="flex items-center gap-2">
           <button onClick={() => setIsRunning(r => !r)}
-            className="text-xs bg-blue-600 hover:bg-blue-500 text-white px-3 py-1.5 rounded-md transition-colors">
+            className="text-xs font-medium text-white px-3 py-1.5 rounded-lg transition-all"
+            style={{ background: 'linear-gradient(135deg,#2563eb,#7c3aed)' }}>
             {isRunning ? 'Pause' : 'Run'}
           </button>
           <button onClick={doStep} disabled={isRunning}
-            className="text-xs bg-gray-700 hover:bg-gray-600 disabled:opacity-40 text-white px-3 py-1.5 rounded-md transition-colors">
+            className="text-xs text-slate-300 hover:text-white px-3 py-1.5 rounded-lg transition-colors disabled:opacity-40"
+            style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.08)' }}>
             Step
           </button>
-          <button onClick={reset} className="text-xs bg-gray-700 hover:bg-gray-600 text-white px-3 py-1.5 rounded-md transition-colors">
+          <button onClick={reset}
+            className="text-xs text-slate-300 hover:text-white px-3 py-1.5 rounded-lg transition-colors"
+            style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.08)' }}>
             Reset
           </button>
           <span className="text-xs text-gray-500">step {step} | x={pos.x.toFixed(3)}</span>

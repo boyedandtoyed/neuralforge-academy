@@ -90,19 +90,21 @@ export default function LossCurve({ maxEpochs = 100 }: LossCurveProps) {
   }, [isRunning, maxEpochs]);
 
   return (
-    <div className="bg-gray-900 rounded-xl border border-gray-800 p-4 my-6">
+    <div className="rounded-2xl p-4 my-6" style={{ background: 'var(--bg-surface)', border: '1px solid rgba(255,255,255,0.08)' }}>
       <h4 className="text-sm font-semibold text-white mb-3">Interactive: Training &amp; Validation Loss</h4>
-      <svg ref={svgRef} width={W} height={H} className="w-full rounded-lg bg-gray-950" />
+      <svg ref={svgRef} width={W} height={H} className="w-full rounded-xl" style={{ background: '#090916' }} />
       <div className="mt-3 flex flex-wrap items-center gap-3">
         <button onClick={() => setIsRunning(r => !r)}
-          className="text-xs bg-blue-600 hover:bg-blue-500 text-white px-3 py-1.5 rounded-md transition-colors">
+          className="text-xs font-medium text-white px-3 py-1.5 rounded-lg transition-all"
+          style={{ background: 'linear-gradient(135deg,#2563eb,#7c3aed)' }}>
           {isRunning ? 'Pause' : epoch >= maxEpochs ? 'Done' : 'Run'}
         </button>
         <button onClick={() => { setEpoch(0); setIsRunning(false); }}
-          className="text-xs bg-gray-700 hover:bg-gray-600 text-white px-3 py-1.5 rounded-md transition-colors">
+          className="text-xs text-slate-300 hover:text-white px-3 py-1.5 rounded-lg transition-colors"
+          style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.08)' }}>
           Reset
         </button>
-        <label className="flex items-center gap-2 text-xs text-gray-400 cursor-pointer">
+        <label className="flex items-center gap-2 text-xs text-slate-400 cursor-pointer">
           <input type="checkbox" checked={overfit} onChange={e => { setOverfit(e.target.checked); setEpoch(0); }}
             className="accent-blue-500" />
           Simulate overfitting

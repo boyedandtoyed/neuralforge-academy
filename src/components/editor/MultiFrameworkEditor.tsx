@@ -177,13 +177,15 @@ _buf.getvalue()
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 h-[calc(100vh-160px)]">
-      <div className="bg-gray-900 rounded-xl border border-gray-800 overflow-hidden flex flex-col">
+      <div className="rounded-xl overflow-hidden flex flex-col" style={{ background: 'var(--bg-surface)', border: '1px solid rgba(255,255,255,0.08)' }}>
         <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as Framework)}>
-          <div className="border-b border-gray-800 px-4">
+          <div className="px-3" style={{ borderBottom: '1px solid rgba(255,255,255,0.07)' }}>
             <TabsList className="flex gap-1 py-2">
               {(['numpy', 'tensorflow', 'pytorch'] as Framework[]).map(tab => (
                 <TabsTrigger key={tab} value={tab}
-                  className="px-3 py-1.5 text-sm rounded-md transition-colors data-[state=active]:bg-blue-600 data-[state=active]:text-white text-gray-400 hover:text-gray-200">
+                  className="px-3 py-1.5 text-sm rounded-lg transition-colors data-[state=active]:text-white text-slate-500 hover:text-slate-300"
+                  style={{ background: 'transparent' }}
+                >
                   {tab === 'numpy' ? 'NumPy' : tab === 'tensorflow' ? 'TensorFlow.js' : 'PyTorch'}
                 </TabsTrigger>
               ))}
@@ -199,9 +201,10 @@ _buf.getvalue()
             </TabsContent>
           ))}
         </Tabs>
-        <div className="p-3 border-t border-gray-800 flex items-center gap-3">
+        <div className="p-3 flex items-center gap-3 shrink-0" style={{ borderTop: '1px solid rgba(255,255,255,0.07)' }}>
           <button onClick={handleRun} disabled={isRunning}
-            className="bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white text-sm font-medium px-4 py-1.5 rounded-md transition-colors flex items-center gap-2">
+            className="text-white text-sm font-medium px-4 py-1.5 rounded-lg transition-all disabled:opacity-50 flex items-center gap-2 hover:opacity-90"
+            style={{ background: 'linear-gradient(135deg,#2563eb,#7c3aed)' }}>
             {isRunning ? '\u27F3 Running...' : '\u25B6 Run'}
           </button>
           <span className="text-xs text-gray-500">
