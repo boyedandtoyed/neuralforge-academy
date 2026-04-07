@@ -7,7 +7,9 @@ interface CourseProgressBadgeProps {
 }
 
 export default function CourseProgressBadge({ courseSlug, lessonSlugs }: CourseProgressBadgeProps) {
-  const { completed, total } = useProgressStore((s) => s.getCourseProgress(courseSlug, lessonSlugs));
+  // Select primitives separately to avoid new object reference on every render (which causes infinite re-renders)
+  const completed = useProgressStore((s) => s.getCourseProgress(courseSlug, lessonSlugs).completed);
+  const total = useProgressStore((s) => s.getCourseProgress(courseSlug, lessonSlugs).total);
   if (completed === 0) return null;
 
   const allDone = completed === total;

@@ -90,7 +90,7 @@ export default function LessonLayout({ courseSlug, courseTitle, currentLesson, l
           <span className="text-sm text-gray-400">Lesson {currentIndex + 1} of {lessons.length}</span>
         </div>
 
-        <article className="max-w-3xl mx-auto px-6 py-12 prose prose-invert prose-blue max-w-none">
+        <article className="max-w-3xl mx-auto px-6 py-12 prose prose-invert prose-blue">
           {children}
         </article>
 
