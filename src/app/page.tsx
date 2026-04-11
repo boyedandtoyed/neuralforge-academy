@@ -1,5 +1,10 @@
 import Link from 'next/link';
-import CourseProgressBadge from '@/components/progress/CourseProgressBadge';
+import dynamic from 'next/dynamic';
+
+const CourseProgressBadge = dynamic(
+  () => import('@/components/progress/CourseProgressBadge'),
+  { ssr: false }
+);
 
 const phases = [
   {
@@ -96,16 +101,16 @@ export default function HomePage() {
             Learn machine learning from first principles — every math concept paired with live
             NumPy implementations you can edit and run instantly in your browser.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-8">
             <Link
               href="/courses/introduction/00-setup"
-              className="bg-blue-600 hover:bg-blue-500 text-white font-semibold px-8 py-3 rounded-lg transition-colors"
+              className="w-full sm:w-auto inline-flex items-center justify-center bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white font-semibold px-8 py-3.5 rounded-xl shadow-lg shadow-blue-500/20 transition-all duration-200 hover:shadow-blue-500/30 hover:-translate-y-0.5"
             >
               Start Learning Free
             </Link>
             <Link
               href="/playground"
-              className="border border-gray-700 hover:border-gray-500 text-gray-300 font-semibold px-8 py-3 rounded-lg transition-colors"
+              className="w-full sm:w-auto inline-flex items-center justify-center bg-gray-800 hover:bg-gray-700 active:bg-gray-900 border border-gray-700 hover:border-gray-500 text-gray-200 font-semibold px-8 py-3.5 rounded-xl transition-all duration-200 hover:-translate-y-0.5"
             >
               Open Playground
             </Link>
@@ -114,31 +119,33 @@ export default function HomePage() {
       </section>
 
       {/* Phases grid */}
-      <section className="max-w-6xl mx-auto px-6 py-16">
-        <h2 className="text-3xl font-bold text-center mb-4">25 Lessons, 9 Phases</h2>
-        <p className="text-gray-400 text-center mb-12">
+      <section className="max-w-6xl mx-auto px-6 py-20">
+        <h2 className="text-3xl font-bold text-center mb-3">25 Lessons, 9 Phases</h2>
+        <p className="text-gray-400 text-center mb-14 max-w-xl mx-auto">
           From Python setup to GANs and diffusion models — every step interactive with KaTeX math and runnable NumPy code.
         </p>
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
           {phases.map((phase) => (
             <Link
               key={phase.slug}
               href={`/courses/${phase.slug}`}
-              className="group bg-gray-900 border border-gray-800 hover:border-blue-500/50 rounded-xl p-6 transition-all hover:shadow-lg hover:shadow-blue-500/10"
+              className="group flex flex-col bg-gray-900 border border-gray-800 hover:border-blue-500/40 rounded-2xl p-6 gap-4 transition-all duration-200 hover:shadow-xl hover:shadow-blue-500/10 hover:-translate-y-0.5"
             >
-              <div className="flex items-start justify-between mb-4">
-                <span className="text-4xl">{phase.icon}</span>
-                <span className="text-xs text-gray-500 bg-gray-800 px-2 py-1 rounded-full">
+              <div className="flex items-start justify-between">
+                <span className="text-3xl leading-none">{phase.icon}</span>
+                <span className="text-xs text-gray-500 bg-gray-800/80 border border-gray-700/60 px-2.5 py-1 rounded-full whitespace-nowrap">
                   Phase {phase.phase} &middot; {phase.lessonSlugs.length} lesson{phase.lessonSlugs.length !== 1 ? 's' : ''}
                 </span>
               </div>
-              <div className="flex items-center gap-2 mb-2">
-                <h3 className="text-lg font-semibold text-white group-hover:text-blue-400 transition-colors">
-                  {phase.title}
-                </h3>
-                <CourseProgressBadge courseSlug={phase.slug} lessonSlugs={phase.lessonSlugs} />
+              <div>
+                <div className="flex items-center gap-2 mb-1.5">
+                  <h3 className="text-base font-semibold text-white group-hover:text-blue-400 transition-colors leading-snug">
+                    {phase.title}
+                  </h3>
+                  <CourseProgressBadge courseSlug={phase.slug} lessonSlugs={phase.lessonSlugs} />
+                </div>
+                <p className="text-sm text-gray-500 leading-relaxed">{phase.description}</p>
               </div>
-              <p className="text-sm text-gray-400">{phase.description}</p>
             </Link>
           ))}
         </div>
