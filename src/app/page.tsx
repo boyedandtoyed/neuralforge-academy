@@ -1,10 +1,5 @@
 import Link from 'next/link';
-import dynamic from 'next/dynamic';
-
-const CourseProgressBadge = dynamic(
-  () => import('@/components/progress/CourseProgressBadge'),
-  { ssr: false }
-);
+import CourseProgressBadge from '@/components/progress/CourseProgressBadge';
 
 const phases = [
   {

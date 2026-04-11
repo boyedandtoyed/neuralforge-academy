@@ -1,4 +1,5 @@
 'use client';
+import { useEffect, useState } from 'react';
 import { useProgressStore } from '@/stores/progressStore';
 
 interface CourseProgressBadgeProps {
@@ -7,8 +8,11 @@ interface CourseProgressBadgeProps {
 }
 
 export default function CourseProgressBadge({ courseSlug, lessonSlugs }: CourseProgressBadgeProps) {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => { setMounted(true); }, []);
+
   const { completed, total } = useProgressStore((s) => s.getCourseProgress(courseSlug, lessonSlugs));
-  if (completed === 0) return null;
+  if (!mounted || completed === 0) return null;
 
   const allDone = completed === total;
   return (
