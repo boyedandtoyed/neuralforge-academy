@@ -29,7 +29,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className="dark">
-      <body suppressHydrationWarning className={`${syne.variable} ${dmSans.variable} font-body bg-bg-base text-slate-100 antialiased`}>
+      <body suppressHydrationWarning className={`${syne.variable} ${dmSans.variable} font-body bg-bg-base text-white antialiased`}>
         <Navigation />
         {children}
       </body>
