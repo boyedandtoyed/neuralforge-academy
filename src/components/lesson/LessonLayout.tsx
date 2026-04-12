@@ -18,37 +18,30 @@ interface LessonLayoutProps {
 
 export default function LessonLayout({ courseSlug, courseTitle, currentLesson, lessons, children }: LessonLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const currentIndex = lessons.findIndex(l => l.slug === currentLesson);
+  const currentIndex = lessons.findIndex((l) => l.slug === currentLesson);
   const prev = lessons[currentIndex - 1];
   const next = lessons[currentIndex + 1];
   const lessonProgress = useProgressStore((s) => s.lessons);
 
-  const completed = lessons.filter(l => lessonProgress[`${courseSlug}/${l.slug}`]?.completed).length;
+  const completed = lessons.filter((l) => lessonProgress[`${courseSlug}/${l.slug}`]?.completed).length;
 
   return (
-    <div className="flex min-h-screen">
-      {/* Sidebar overlay for mobile */}
+    <div className="flex min-h-screen bg-slate-950 text-slate-100">
       {sidebarOpen && (
-        <div className="fixed inset-0 bg-black/50 z-30 lg:hidden" onClick={() => setSidebarOpen(false)} />
+        <div className="fixed inset-0 z-30 bg-black/50 lg:hidden" onClick={() => setSidebarOpen(false)} />
       )}
 
-      {/* Sidebar */}
-      <aside className={`
-        fixed lg:sticky top-14 left-0 h-[calc(100vh-3.5rem)] w-64 bg-gray-900 border-r border-gray-800
-        flex flex-col overflow-y-auto z-40 transition-transform duration-200
-        ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
-      `}>
-        <div className="p-4 border-b border-gray-800">
-          <Link href={`/courses/${courseSlug}`} className="text-xs text-gray-500 hover:text-gray-300 transition-colors">
+      <aside className={`fixed top-14 left-0 z-40 h-[calc(100vh-3.5rem)] w-72 overflow-y-auto border-r border-slate-800 bg-slate-950/95 p-4 transition-transform duration-200 lg:sticky lg:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
+        <div className="mb-4 border-b border-slate-800 pb-4">
+          <Link href={`/courses/${courseSlug}`} className="text-sm text-slate-400 hover:text-slate-100 transition">
             &larr; {courseTitle}
           </Link>
-          {completed > 0 && (
-            <div className="mt-2 text-xs text-gray-500">
-              <span className="text-green-400 font-medium">{completed}</span>/{lessons.length} completed
-            </div>
-          )}
+          <div className="mt-3 text-sm text-slate-400">
+            <span className="font-semibold text-sky-300">{completed}</span>/{lessons.length} completed
+          </div>
         </div>
-        <nav className="flex-1 p-2">
+
+        <nav className="space-y-2">
           {lessons.map((lesson, i) => {
             const key = `${courseSlug}/${lesson.slug}`;
             const isCompleted = lessonProgress[key]?.completed ?? false;
@@ -58,17 +51,12 @@ export default function LessonLayout({ courseSlug, courseTitle, currentLesson, l
                 key={lesson.slug}
                 href={`/courses/${courseSlug}/${lesson.slug}`}
                 onClick={() => setSidebarOpen(false)}
-                className={`
-                  flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors mb-0.5
-                  ${isCurrent
-                    ? 'bg-blue-600/20 text-blue-400 border border-blue-600/30'
-                    : 'text-gray-400 hover:text-gray-200 hover:bg-gray-800'}
-                `}
+                className={`flex items-center gap-3 rounded-2xl px-3 py-3 text-sm transition ${isCurrent ? 'bg-slate-900 text-white border border-slate-700' : 'text-slate-400 hover:bg-slate-900/80 hover:text-white'}`}
               >
-                <span className="text-xs font-mono text-gray-600 w-5 shrink-0">{String(i + 1).padStart(2, '0')}</span>
-                <span className="truncate flex-1">{lesson.title}</span>
+                <span className="w-6 text-right font-mono text-slate-500">{String(i + 1).padStart(2, '0')}</span>
+                <span className="min-w-0 truncate">{lesson.title}</span>
                 {isCompleted && (
-                  <svg className="w-4 h-4 text-green-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="h-4 w-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
                 )}
@@ -78,48 +66,42 @@ export default function LessonLayout({ courseSlug, courseTitle, currentLesson, l
         </nav>
       </aside>
 
-      {/* Main content */}
-      <main className="flex-1 min-w-0">
-        {/* Mobile sidebar toggle */}
-        <div className="lg:hidden sticky top-14 z-20 bg-gray-950 border-b border-gray-800 px-4 py-2 flex items-center gap-3">
-          <button onClick={() => setSidebarOpen(true)} className="text-gray-400 hover:text-white">
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          </button>
-          <span className="text-sm text-gray-400">Lesson {currentIndex + 1} of {lessons.length}</span>
+      <main className="flex-1 min-w-0 lg:ml-72">
+        <div className="lg:hidden sticky top-14 z-20 border-b border-slate-800 bg-slate-950/95 px-4 py-3 backdrop-blur-sm">
+          <div className="flex items-center justify-between">
+            <button onClick={() => setSidebarOpen(true)} className="text-slate-300 hover:text-white">
+              <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
+            <span className="text-sm text-slate-400">Lesson {currentIndex + 1}/{lessons.length}</span>
+          </div>
         </div>
 
-        <article className="max-w-3xl mx-auto px-6 py-12 prose prose-invert prose-blue max-w-none">
+        <article className="mx-auto max-w-4xl px-6 py-10 prose prose-invert prose-slate">
           {children}
         </article>
 
-        {/* Prev/Next navigation */}
-        <div className="max-w-3xl mx-auto px-6 pb-16 flex items-center justify-between gap-4">
-          {prev ? (
-            <Link href={`/courses/${courseSlug}/${prev.slug}`}
-              className="flex items-center gap-2 text-sm text-gray-400 hover:text-white transition-colors border border-gray-800 hover:border-gray-600 rounded-lg px-4 py-3 flex-1 max-w-xs">
-              <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-              </svg>
-              <div className="min-w-0">
-                <div className="text-xs text-gray-600">Previous</div>
-                <div className="truncate">{prev.title}</div>
-              </div>
-            </Link>
-          ) : <div />}
-          {next ? (
-            <Link href={`/courses/${courseSlug}/${next.slug}`}
-              className="flex items-center gap-2 text-sm text-gray-400 hover:text-white transition-colors border border-gray-800 hover:border-gray-600 rounded-lg px-4 py-3 flex-1 max-w-xs justify-end text-right">
-              <div className="min-w-0">
-                <div className="text-xs text-gray-600">Next</div>
-                <div className="truncate">{next.title}</div>
-              </div>
-              <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </Link>
-          ) : <div />}
+        <div className="mx-auto max-w-4xl px-6 pb-16">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            {prev ? (
+              <Link href={`/courses/${courseSlug}/${prev.slug}`} className="flex w-full items-center justify-center gap-2 rounded-2xl border border-slate-800 bg-slate-900 px-4 py-3 text-sm text-slate-200 transition hover:border-slate-700 hover:text-white sm:w-auto">
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+                {prev.title}
+              </Link>
+            ) : <div className="h-12" />}
+
+            {next ? (
+              <Link href={`/courses/${courseSlug}/${next.slug}`} className="flex w-full items-center justify-center gap-2 rounded-2xl border border-slate-800 bg-slate-900 px-4 py-3 text-sm text-slate-200 transition hover:border-slate-700 hover:text-white sm:w-auto">
+                {next.title}
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </Link>
+            ) : <div className="h-12" />}
+          </div>
         </div>
       </main>
     </div>

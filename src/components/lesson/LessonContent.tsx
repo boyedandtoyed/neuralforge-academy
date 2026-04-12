@@ -70,7 +70,12 @@ interface LessonContentProps {
 
 export default function LessonContent({ content, lessonTitle, lessonKey }: LessonContentProps) {
   const markComplete = useProgressStore((s) => s.markComplete);
-  const progress = useProgressStore((s) => lessonKey ? s.getLessonProgress(lessonKey) : null);
+  const completed = useProgressStore((s) =>
+    lessonKey ? s.lessons[lessonKey]?.completed ?? false : false
+  );
+  const quizPassed = useProgressStore((s) =>
+    lessonKey ? s.lessons[lessonKey]?.quizPassed ?? false : false
+  );
   const visualizers = lessonKey ? (VISUALIZERS[lessonKey] ?? []) : [];
 
   if (!content) {
@@ -158,7 +163,7 @@ export default function LessonContent({ content, lessonTitle, lessonKey }: Lesso
       {/* Mark Complete button */}
       {lessonKey && (
         <div className="mt-10 pt-8 border-t border-gray-800 flex items-center gap-4">
-          {progress?.completed ? (
+          {completed ? (
             <div className="flex items-center gap-2 text-green-400 text-sm font-medium">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -176,7 +181,7 @@ export default function LessonContent({ content, lessonTitle, lessonKey }: Lesso
               Mark as Complete
             </button>
           )}
-          {progress?.quizPassed && !progress?.completed && (
+          {quizPassed && !completed && (
             <span className="text-xs text-blue-400">Quiz passed — mark complete when ready</span>
           )}
         </div>

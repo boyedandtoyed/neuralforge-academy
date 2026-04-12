@@ -11,13 +11,17 @@ export default function CourseProgressBadge({ courseSlug, lessonSlugs }: CourseP
   const [mounted, setMounted] = useState(false);
   useEffect(() => { setMounted(true); }, []);
 
-  const { completed, total } = useProgressStore((s) => s.getCourseProgress(courseSlug, lessonSlugs));
+  const completed = useProgressStore((s) =>
+    lessonSlugs.reduce((count, slug) => count + (s.lessons[`${courseSlug}/${slug}`]?.completed ? 1 : 0), 0)
+  );
+  const total = lessonSlugs.length;
+
   if (!mounted || completed === 0) return null;
 
-  const allDone = completed === total;
+  const isDone = completed === total;
   return (
-    <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${allDone ? 'bg-green-500/15 text-green-400' : 'bg-blue-500/15 text-blue-400'}`}>
-      {allDone ? '✓ ' : ''}{completed}/{total} done
+    <span className={`text-xs px-2.5 py-1 rounded-full font-semibold ${isDone ? 'bg-emerald-500/15 text-emerald-300' : 'bg-sky-500/15 text-sky-300'}`}>
+      {isDone ? '✓ ' : ''}{completed}/{total} done
     </span>
   );
 }

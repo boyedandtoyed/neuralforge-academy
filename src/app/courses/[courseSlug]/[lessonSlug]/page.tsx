@@ -4,7 +4,7 @@ import LessonContent from '@/components/lesson/LessonContent';
 import { LESSON_CONTENT, COURSE_LESSONS, COURSE_TITLES } from '@/lib/lessonData';
 
 interface Props {
-  params: Promise<{ courseSlug: string; lessonSlug: string }>;
+  params: { courseSlug: string; lessonSlug: string };
 }
 
 export function generateStaticParams() {
@@ -17,8 +17,8 @@ export function generateStaticParams() {
   return params;
 }
 
-export default async function LessonPage({ params }: Props) {
-  const { courseSlug, lessonSlug } = await params;
+export default function LessonPage({ params }: Props) {
+  const { courseSlug, lessonSlug } = params;
 
   const lessons = COURSE_LESSONS[courseSlug];
   const courseTitle = COURSE_TITLES[courseSlug];
