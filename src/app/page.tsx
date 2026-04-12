@@ -7,8 +7,6 @@ const phases = [
   {
     slug: 'introduction',
     title: 'Introduction',
-    lessonSlugs: ['00-setup', '01-history-biology', '02-probability', '03-matrix-ops'],
-    icon: '⚡',
     phase: 0,
     description: 'Python setup, neural history, probability, and matrix fundamentals.',
   },
@@ -23,8 +21,6 @@ const phases = [
   {
     slug: 'regression',
     title: 'Regression',
-    lessonSlugs: ['07-linear-regression', '08-logistic-softmax'],
-    icon: '📈',
     phase: 2,
     description: 'Regression, classification, and understanding how models learn from data.',
   },
@@ -47,35 +43,45 @@ const phases = [
   {
     slug: 'autoencoders',
     title: 'Autoencoders & VAEs',
-    lessonSlugs: ['16-autoencoders', '17-vaes'],
-    icon: '🔁',
     phase: 5,
     description: 'Compression, latent spaces, and generative modeling with autoencoders.',
   },
   {
     slug: 'rnns',
     title: 'Recurrent Networks',
-    lessonSlugs: ['18-rnns', '19-lstm-gru'],
-    icon: '🔄',
     phase: 6,
     description: 'Sequence modeling, memory, and recurrent architectures for time-series data.',
   },
   {
     slug: 'transformers',
     title: 'Transformers',
-    lessonSlugs: ['20-embeddings', '21-attention', '22-transformer-arch'],
-    icon: '🤖',
     phase: 7,
     description: 'Attention, embeddings, and the architecture behind modern language models.',
   },
   {
     slug: 'generative',
     title: 'Generative Models',
-    lessonSlugs: ['23-gans', '24-diffusion'],
-    icon: '✨',
     phase: 8,
     description: 'GANs and diffusion models for modern generative AI workflows.',
   },
+];
+
+const stats = [
+  { value: '25', label: 'Lessons' },
+  { value: '9', label: 'Phases' },
+  { value: '100%', label: 'In-Browser' },
+  { value: 'Free', label: 'Forever' },
+];
+
+const techStack = [
+  { name: 'Next.js 15', color: '#fff' },
+  { name: 'React 19', color: '#61dafb' },
+  { name: 'TypeScript', color: '#3178c6' },
+  { name: 'Pyodide', color: '#ffd43b' },
+  { name: 'KaTeX', color: '#1a73e8' },
+  { name: 'TailwindCSS', color: '#38bdf8' },
+  { name: 'D3.js', color: '#f9a03c' },
+  { name: 'Three.js', color: '#049ef4' },
 ];
 
 export default function HomePage() {
@@ -240,8 +246,8 @@ export default function HomePage() {
                 <h3 className="mt-6 text-xl font-semibold text-white">{phase.title}</h3>
                 <p className="mt-3 text-sm leading-6 text-slate-400">{phase.description}</p>
                 <div className="mt-6 flex items-center justify-between gap-3">
-                  <span className="text-xs uppercase tracking-[0.16em] text-slate-500">{phase.lessonSlugs.length} lessons</span>
-                  <CourseProgressBadge courseSlug={phase.slug} lessonSlugs={phase.lessonSlugs} />
+                  <span className="text-xs uppercase tracking-[0.16em] text-slate-500">{phase.lessonSlugs?.length ?? 0} lessons</span>
+                  <CourseProgressBadge courseSlug={phase.slug} lessonSlugs={phase.lessonSlugs ?? []} />
                 </div>
               </Link>
             </motion.div>

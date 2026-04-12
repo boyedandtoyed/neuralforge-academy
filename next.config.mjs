@@ -1,7 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  experimental: { mdxRs: true },
   webpack: (config) => {
     // Required for Pyodide Web Worker
     config.resolve.fallback = { fs: false, path: false, crypto: false };

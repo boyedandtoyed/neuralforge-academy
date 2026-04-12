@@ -65,6 +65,7 @@ export default function LessonLayout({ courseSlug, courseTitle, currentLesson, l
             const key = `${courseSlug}/${lesson.slug}`;
             const isCompleted = lessonProgress[key]?.completed ?? false;
             const isCurrent = currentLesson === lesson.slug;
+
             return (
               <motion.div
                 key={lesson.slug}

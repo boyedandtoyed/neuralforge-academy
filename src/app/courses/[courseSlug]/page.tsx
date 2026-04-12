@@ -6,6 +6,7 @@ import LessonCompletedDot from '@/components/progress/LessonCompletedDot';
 const COURSES: Record<string, {
   title: string;
   description: string;
+  accent: string;
   lessons: { slug: string; title: string; description: string }[];
 }> = {
   introduction: {

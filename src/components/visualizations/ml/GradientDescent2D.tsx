@@ -2,6 +2,11 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import * as d3 from 'd3';
 
+const W = 400;
+const H = 320;
+const xScale = d3.scaleLinear([-5, 5], [20, W - 20]);
+const yScale = d3.scaleLinear([-1, 25], [H - 20, 20]);
+
 export default function GradientDescent2D() {
   const svgRef = useRef<SVGSVGElement>(null);
   const [lr, setLr] = useState(0.1);
@@ -11,11 +16,6 @@ export default function GradientDescent2D() {
   const animRef = useRef<number | null>(null);
   const posRef = useRef(pos);
   posRef.current = pos;
-
-  const W = 400;
-  const H = 320;
-  const xScale = d3.scaleLinear([-5, 5], [20, W - 20]);
-  const yScale = d3.scaleLinear([-1, 25], [H - 20, 20]);
 
   const f = useCallback((x: number) => 0.1 * x * x * x * x - 2 * x * x + 0.5 * x + 5, []);
   const df = useCallback((x: number) => 0.4 * x * x * x - 4 * x + 0.5, []);
@@ -54,7 +54,7 @@ export default function GradientDescent2D() {
     svg.append('text').attr('x', W - 25).attr('y', 18)
       .attr('text-anchor', 'end').attr('fill', '#9ca3af').attr('font-size', 11)
       .text(`f(x) = ${f(posRef.current.x).toFixed(3)}`);
-  }, [pos, f, df, xScale, yScale, W, H]);
+  }, [pos, f, df]);
 
   const doStep = useCallback(() => {
     setPos(p => {
@@ -86,29 +86,33 @@ export default function GradientDescent2D() {
   };
 
   return (
-    <div className="bg-gray-900 rounded-xl border border-gray-800 p-4 my-6">
+    <div className="rounded-2xl p-4 my-6" style={{ background: 'var(--bg-surface)', border: '1px solid rgba(255,255,255,0.08)' }}>
       <h4 className="text-sm font-semibold text-white mb-3">Interactive: Gradient Descent</h4>
-      <svg ref={svgRef} width={W} height={H} className="rounded-lg bg-gray-950 w-full" />
+      <svg ref={svgRef} width={W} height={H} className="rounded-xl w-full" style={{ background: '#090916' }} />
       <div className="mt-3 flex flex-wrap items-center gap-4">
         <div className="flex items-center gap-2 flex-1 min-w-40">
-          <label className="text-xs text-gray-400 whitespace-nowrap">LR: {lr.toFixed(3)}</label>
+          <label className="text-xs text-slate-400 whitespace-nowrap">LR: {lr.toFixed(3)}</label>
           <input type="range" min={0.001} max={0.5} step={0.001} value={lr}
             onChange={e => setLr(Number(e.target.value))}
             className="flex-1 accent-blue-500" />
         </div>
         <div className="flex items-center gap-2">
           <button onClick={() => setIsRunning(r => !r)}
-            className="text-xs bg-blue-600 hover:bg-blue-500 text-white px-3 py-1.5 rounded-md transition-colors">
+            className="text-xs font-medium text-white px-3 py-1.5 rounded-lg transition-all"
+            style={{ background: 'linear-gradient(135deg,#2563eb,#7c3aed)' }}>
             {isRunning ? 'Pause' : 'Run'}
           </button>
           <button onClick={doStep} disabled={isRunning}
-            className="text-xs bg-gray-700 hover:bg-gray-600 disabled:opacity-40 text-white px-3 py-1.5 rounded-md transition-colors">
+            className="text-xs text-slate-300 hover:text-white px-3 py-1.5 rounded-lg transition-colors disabled:opacity-40"
+            style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.08)' }}>
             Step
           </button>
-          <button onClick={reset} className="text-xs bg-gray-700 hover:bg-gray-600 text-white px-3 py-1.5 rounded-md transition-colors">
+          <button onClick={reset}
+            className="text-xs text-slate-300 hover:text-white px-3 py-1.5 rounded-lg transition-colors"
+            style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.08)' }}>
             Reset
           </button>
-          <span className="text-xs text-gray-500">step {step} | x={pos.x.toFixed(3)}</span>
+          <span className="text-xs text-slate-500">step {step} | x={pos.x.toFixed(3)}</span>
         </div>
       </div>
     </div>

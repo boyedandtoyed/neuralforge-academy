@@ -13,6 +13,13 @@ interface Visualizer {
 }
 
 const VISUALIZERS: Record<string, Visualizer[]> = {
+  'introduction/00-setup': [
+    { title: 'Python Tutor', url: 'https://pythontutor.com/', description: 'Step through Python code execution visually' },
+    { title: 'NumPy Documentation', url: 'https://numpy.org/doc/stable/', description: 'Official NumPy docs with interactive examples' },
+  ],
+  'introduction/01-history-biology': [
+    { title: 'Neural Networks and Deep Learning (Michael Nielsen)', url: 'http://neuralnetworksanddeeplearning.com/', description: 'Free online book with interactive neural network visualizations' },
+  ],
   'introduction/02-probability': [
     { title: 'Seeing Theory', url: 'https://seeing-theory.brown.edu/', description: 'Beautiful interactive probability & statistics visualizations' },
   ],
@@ -22,20 +29,44 @@ const VISUALIZERS: Record<string, Visualizer[]> = {
   'neuron-model/04-single-neuron': [
     { title: 'TensorFlow Playground', url: 'https://playground.tensorflow.org/', description: 'Train neural nets interactively in your browser' },
   ],
+  'neuron-model/05-activation-fns': [
+    { title: 'Activation Functions (Desmos)', url: 'https://www.desmos.com/calculator', description: 'Graph activation functions like sigmoid, tanh, ReLU interactively' },
+  ],
   'neuron-model/06-network-topology': [
     { title: 'TensorFlow Playground', url: 'https://playground.tensorflow.org/', description: 'Experiment with different network architectures live' },
+  ],
+  'regression/07-linear-regression': [
+    { title: 'Linear Regression (Desmos)', url: 'https://www.desmos.com/calculator', description: 'Interactive least squares regression visualization' },
+  ],
+  'regression/08-logistic-softmax': [
+    { title: 'Logistic Regression (Desmos)', url: 'https://www.desmos.com/calculator', description: 'Visualize sigmoid and softmax functions' },
   ],
   'optimization/09-backprop-compgraph': [
     { title: 'Backprop Explainer (distill.pub)', url: 'https://distill.pub/2020/backprop-explainer/', description: 'Visual step-by-step walkthrough of backpropagation' },
   ],
+  'optimization/10-taylor-hessian': [
+    { title: 'Taylor Series (Wolfram)', url: 'https://www.wolframalpha.com/input/?i=taylor+series', description: 'Explore Taylor expansions and approximations' },
+  ],
   'optimization/11-optimizers': [
     { title: 'Why Momentum Really Works (distill.pub)', url: 'https://distill.pub/2017/momentum/', description: 'Interactive visual explanation of momentum & optimizer dynamics' },
+  ],
+  'optimization/12-lr-schedules': [
+    { title: 'Learning Rate Schedules (Desmos)', url: 'https://www.desmos.com/calculator', description: 'Graph different learning rate decay functions' },
+  ],
+  'optimization/13-gradients-reg': [
+    { title: 'Gradient Descent (Desmos)', url: 'https://www.desmos.com/calculator', description: 'Visualize gradient descent on different functions' },
   ],
   'cnns/14-convolution': [
     { title: 'CNN Explainer', url: 'https://poloclub.github.io/cnn-explainer/', description: 'Interactive visualization of convolutions and feature maps' },
   ],
   'cnns/15-cnn-architectures': [
     { title: 'CNN Explainer', url: 'https://poloclub.github.io/cnn-explainer/', description: 'Explore CNN layers and activations interactively' },
+  ],
+  'autoencoders/16-autoencoders': [
+    { title: 'Autoencoder Demo (TensorFlow)', url: 'https://www.tensorflow.org/tutorials/generative/autoencoder', description: 'Interactive autoencoder training and visualization' },
+  ],
+  'autoencoders/17-vaes': [
+    { title: 'VAE Explainer (distill.pub)', url: 'https://distill.pub/2016/deconv-checkerboard/', description: 'Visual guide to variational autoencoders and deconvolution' },
   ],
   'rnns/18-rnns': [
     { title: 'Memorization in RNNs (distill.pub)', url: 'https://distill.pub/2019/memorization-in-rnns/', description: 'Visual exploration of how RNNs store information' },
