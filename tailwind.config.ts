@@ -1,18 +1,10 @@
 import type { Config } from 'tailwindcss';
+
 const config: Config = {
   content: ['./src/**/*.{js,ts,jsx,tsx,mdx}'],
   theme: {
     extend: {
       colors: {
-        bg: {
-          base: '#0a0f1e',
-          surface: '#0f1729',
-          card: 'rgba(255, 255, 255, 0.06)',
-        },
-        border: {
-          subtle: 'rgba(255, 255, 255, 0.08)',
-          accent: 'rgba(0, 212, 200, 0.35)',
-        },
         teal: {
           50: '#ecfeff',
           100: '#cffafe',
@@ -35,4 +27,5 @@ const config: Config = {
   },
   plugins: [],
 };
+
 export default config;

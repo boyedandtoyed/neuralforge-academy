@@ -90,7 +90,7 @@ const COURSES: Record<string, {
 };
 
 interface Props {
-  params: { courseSlug: string };
+  params: Promise<{ courseSlug: string }>;
 }
 
 export function generateStaticParams() {
@@ -98,7 +98,7 @@ export function generateStaticParams() {
 }
 
 export default async function CoursePage({ params }: Props) {
-  const { courseSlug } = params;
+  const { courseSlug } = await params;
   const course = COURSES[courseSlug];
   if (!course) notFound();
 
