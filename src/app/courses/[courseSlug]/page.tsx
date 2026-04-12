@@ -97,7 +97,7 @@ export function generateStaticParams() {
   return Object.keys(COURSES).map((courseSlug) => ({ courseSlug }));
 }
 
-export default function CoursePage({ params }: Props) {
+export default async function CoursePage({ params }: Props) {
   const { courseSlug } = params;
   const course = COURSES[courseSlug];
   if (!course) notFound();
@@ -107,7 +107,9 @@ export default function CoursePage({ params }: Props) {
       <div className="mx-auto max-w-6xl px-6 py-12 lg:py-16">
         <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <Link href="/" className="text-sm text-slate-400 transition hover:text-slate-200">&larr; All phases</Link>
+            <div>
+              <Link href="/" className="text-sm text-slate-400 transition hover:text-slate-200">&larr; All phases</Link>
+            </div>
             <h1 className="mt-3 text-4xl font-semibold text-white sm:text-5xl">{course.title}</h1>
             <p className="mt-4 max-w-2xl text-slate-400 leading-7">{course.description}</p>
           </div>
@@ -125,20 +127,27 @@ export default function CoursePage({ params }: Props) {
 
         <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {course.lessons.map((lesson, index) => (
-            <Link
+            <div
               key={lesson.slug}
-              href={`/courses/${courseSlug}/${lesson.slug}`}
-              className="group rounded-3xl border border-white/10 bg-slate-900/80 p-6 text-left transition hover:-translate-y-1 hover:border-sky-500/30 hover:bg-slate-900"
+              className="transition-transform duration-200"
             >
-              <div className="flex items-center justify-between gap-4">
-                <div>
-                  <p className="text-sm text-slate-400">Lesson {String(index + 1).padStart(2, '0')}</p>
-                  <h2 className="mt-3 text-lg font-semibold text-white">{lesson.title}</h2>
+              <Link
+                href={`/courses/${courseSlug}/${lesson.slug}`}
+                className="group block overflow-hidden rounded-3xl border border-white/10 bg-slate-900/80 p-6 text-left transition hover:border-sky-500/30 hover:bg-slate-900 hover:shadow-lg hover:shadow-sky-500/10"
+              >
+                <div className="flex items-center justify-between gap-4">
+                  <div>
+                    <p className="text-sm text-slate-400">Lesson {String(index + 1).padStart(2, '0')}</p>
+                    <h2 className="mt-3 text-lg font-semibold text-white">{lesson.title}</h2>
+                  </div>
+                  <LessonCompletedDot lessonKey={`${courseSlug}/${lesson.slug}`} />
                 </div>
-                <LessonCompletedDot lessonKey={`${courseSlug}/${lesson.slug}`} />
-              </div>
-              <p className="mt-4 text-sm leading-6 text-slate-400">{lesson.description}</p>
-            </Link>
+                <p className="mt-4 text-sm leading-6 text-slate-400">{lesson.description}</p>
+                <div className="mt-4 inline-flex items-center gap-2 text-sm text-sky-300 opacity-0 group-hover:opacity-100 transition-opacity">
+                  Start lesson →
+                </div>
+              </Link>
+            </div>
           ))}
         </div>
       </div>
