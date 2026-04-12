@@ -114,7 +114,7 @@ export default function HomePage() {
               <motion.div
                 className="inline-flex items-center gap-2 rounded-full border border-cyan-500/20 bg-cyan-500/10 px-4 py-2 text-xs uppercase tracking-[0.24em] text-cyan-200 shadow-sm shadow-cyan-500/10"
                 whileHover={{ scale: 1.05 }}
-                transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                transition={{ type: 'spring', stiffness: 400, damping: 10 }}
               >
                 <span className="h-2 w-2 rounded-full bg-cyan-300 animate-pulse" />
                 Browser-first ML learning with live code and interactive lessons.
@@ -223,7 +223,7 @@ export default function HomePage() {
               key={phase.slug}
               variants={itemVariants}
               whileHover={{ y: -8, scale: 1.02 }}
-              transition={{ type: "spring", stiffness: 300, damping: 20 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 20 }}
             >
               <Link
                 href={`/courses/${phase.slug}`}
@@ -259,7 +259,7 @@ export default function HomePage() {
         <motion.div
           className="rounded-[2rem] border border-slate-800 bg-slate-950/90 p-10 shadow-[0_20px_120px_rgba(15,23,42,0.28)]"
           whileHover={{ scale: 1.01 }}
-          transition={{ type: "spring", stiffness: 300, damping: 20 }}
+          transition={{ type: 'spring', stiffness: 300, damping: 20 }}
         >
           <div className="grid gap-6 lg:grid-cols-3">
             {['Live Python', 'Visual math', 'Auto-graded quizzes'].map((feature, index) => (
