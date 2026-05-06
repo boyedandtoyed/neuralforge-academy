@@ -4,9 +4,8 @@ import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 
 const navItems = [
-  { href: '/courses/introduction', label: 'Courses',      color: '#00d4c8' },
-  { href: '/playground',          label: 'Playground',   color: '#8b5cf6' },
-  { href: '/architecture',        label: 'Architecture', color: '#f59e0b' },
+  { href: '/courses/introduction', label: 'Courses',    color: '#00d4c8' },
+  { href: '/playground',          label: 'Playground', color: '#8b5cf6' },
 ];
 
 export default function Navigation() {
