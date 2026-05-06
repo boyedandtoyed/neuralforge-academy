@@ -4,8 +4,9 @@ import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 
 const navItems = [
-  { href: '/courses/introduction', label: 'Courses' },
-  { href: '/playground', label: 'Playground' },
+  { href: '/courses/introduction', label: 'Courses',      color: '#00d4c8' },
+  { href: '/playground',          label: 'Playground',   color: '#8b5cf6' },
+  { href: '/architecture',        label: 'Architecture', color: '#f59e0b' },
 ];
 
 export default function Navigation() {
@@ -16,9 +17,12 @@ export default function Navigation() {
   return (
     <nav className="sticky top-0 z-50 border-b border-white/10 bg-slate-950/90 backdrop-blur-xl shadow-[0_25px_60px_rgba(0,0,0,0.25)]">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6">
+        {/* Logo — multi-color glow */}
         <Link href="/" className="inline-flex items-center gap-3">
-          <span className="relative inline-flex h-11 w-11 items-center justify-center rounded-3xl bg-teal-500/10 text-teal-300 shadow-[0_0_25px_rgba(0,212,200,0.16)]">
-            <span className="absolute inset-0 rounded-3xl bg-gradient-to-br from-cyan-400/20 to-teal-400/10 blur-xl opacity-70" />
+          <span className="relative inline-flex h-11 w-11 items-center justify-center rounded-3xl text-teal-300"
+            style={{ background: 'rgba(0,212,200,0.08)', boxShadow: '0 0 24px rgba(0,212,200,0.18), 0 0 48px rgba(139,92,246,0.12)' }}>
+            <span className="absolute inset-0 rounded-3xl opacity-60 blur-xl"
+              style={{ background: 'linear-gradient(135deg, rgba(0,212,200,0.3), rgba(139,92,246,0.2), rgba(245,158,11,0.1))' }} />
             <svg className="relative h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M12 3L20 8.5L12 14L4 8.5L12 3Z" />
               <path d="M4 15.5L12 21L20 15.5" />
@@ -30,13 +34,18 @@ export default function Navigation() {
           </div>
         </Link>
 
+        {/* Desktop nav */}
         <div className="hidden items-center gap-3 md:flex">
           {navItems.map((item) => {
-            const active = pathname === item.href;
+            const active = pathname === item.href || pathname.startsWith(item.href + '/');
             return (
-              <Link key={item.href} href={item.href} className="relative inline-flex items-center px-3 py-2 text-sm font-medium text-slate-300 transition-all duration-200 hover:text-white">
+              <Link key={item.href} href={item.href}
+                className="relative inline-flex items-center px-3 py-2 text-sm font-medium text-slate-300 transition-all duration-200 hover:text-white">
                 {item.label}
-                <span className={`absolute bottom-0 left-0 h-[2px] w-full rounded-full bg-teal-400 transition-all duration-300 ${active ? 'scale-x-100 opacity-100' : 'scale-x-0 opacity-0'}`} />
+                <span
+                  className={`absolute bottom-0 left-0 h-[2px] w-full rounded-full transition-all duration-300 ${active ? 'scale-x-100 opacity-100' : 'scale-x-0 opacity-0'}`}
+                  style={{ background: item.color }}
+                />
               </Link>
             );
           })}
@@ -57,16 +66,14 @@ export default function Navigation() {
             <Link
               href="/courses/introduction/00-setup"
               className="text-sm font-medium text-white px-4 py-1.5 rounded-lg transition-all hover:opacity-90 active:scale-95"
-              style={{
-                background: 'linear-gradient(135deg, #2563eb, #7c3aed)',
-                boxShadow: '0 0 20px rgba(59,130,246,0.3)',
-              }}
+              style={{ background: 'linear-gradient(135deg, #2563eb, #7c3aed)', boxShadow: '0 0 20px rgba(59,130,246,0.3)' }}
             >
               Start Free
             </Link>
           )}
         </div>
 
+        {/* Mobile hamburger */}
         <button
           className="inline-flex items-center rounded-full border border-white/10 bg-slate-900 p-2 text-slate-300 transition hover:border-teal-400 hover:text-white md:hidden"
           onClick={() => setMobileOpen((open) => !open)}
@@ -78,6 +85,7 @@ export default function Navigation() {
         </button>
       </div>
 
+      {/* Mobile menu */}
       {mobileOpen && (
         <div className="border-t border-white/10 bg-slate-950 px-4 py-4 md:hidden">
           <div className="space-y-3">
@@ -86,7 +94,8 @@ export default function Navigation() {
                 key={item.href}
                 href={item.href}
                 onClick={() => setMobileOpen(false)}
-                className="block rounded-2xl border border-white/10 bg-slate-900 px-4 py-3 text-sm text-slate-300 transition hover:border-teal-400 hover:text-white"
+                className="block rounded-2xl border border-white/10 bg-slate-900 px-4 py-3 text-sm text-slate-300 transition hover:text-white"
+                style={{ borderColor: pathname === item.href ? item.color + '44' : undefined }}
               >
                 {item.label}
               </Link>
@@ -106,29 +115,5 @@ export default function Navigation() {
         </div>
       )}
     </nav>
-  );
-}
-
-function NavLink({ href, active, children }: { href: string; active: boolean; children: React.ReactNode }) {
-  return (
-    <Link
-      href={href}
-      className="px-3 py-1.5 text-sm rounded-lg transition-colors"
-      style={{ color: active ? '#f1f5f9' : '#94a3b8', background: active ? 'rgba(255,255,255,0.07)' : 'transparent' }}
-    >
-      {children}
-    </Link>
-  );
-}
-
-function MobileNavLink({ href, onClick, children }: { href: string; onClick: () => void; children: React.ReactNode }) {
-  return (
-    <Link
-      href={href}
-      onClick={onClick}
-      className="flex items-center px-3 py-2.5 text-sm text-slate-300 hover:text-white rounded-lg hover:bg-white/5 transition-colors"
-    >
-      {children}
-    </Link>
   );
 }

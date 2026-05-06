@@ -6,6 +6,13 @@ import OutputPanel from './OutputPanel';
 
 type Framework = 'numpy' | 'tensorflow' | 'pytorch';
 
+/* Per-tab color scheme */
+const TAB_COLORS: Record<Framework, { color: string; bg: string; border: string; label: string }> = {
+  numpy:      { color: '#93c5fd', bg: 'rgba(59,130,246,0.15)',  border: 'rgba(59,130,246,0.4)',  label: 'NumPy' },
+  tensorflow: { color: '#fdba74', bg: 'rgba(249,115,22,0.15)',  border: 'rgba(249,115,22,0.4)',  label: 'TensorFlow.js' },
+  pytorch:    { color: '#fca5a5', bg: 'rgba(239,68,68,0.15)',   border: 'rgba(239,68,68,0.4)',   label: 'PyTorch' },
+};
+
 const STARTER_CODE: Record<Framework, string> = {
   numpy: `import numpy as np
 
@@ -150,15 +157,9 @@ _buf.getvalue()
       }
       const { success, output: out, error } = e.data;
       setIsRunning(false);
-      if (success) {
-        setOutput(out || '(no output)');
-      } else {
-        setOutput(`Error:\n${error}`);
-      }
+      setOutput(success ? (out || '(no output)') : `Error:\n${error}`);
     };
 
-    // If the worker crashes (e.g. CDN 404, WASM error), reset the run button
-    // so the user is never stuck in "Running…" forever.
     worker.onerror = (err) => {
       setIsRunning(false);
       setOutput(`Worker error: ${err.message ?? 'Failed to initialize Python runtime.'}\n\nCheck your network connection and try again.`);
@@ -170,18 +171,14 @@ _buf.getvalue()
 
   const handleRun = async () => {
     const currentCode = code[activeTab].trim();
-
-    // Guard: don't submit empty code
     if (!currentCode) {
       setOutput('Nothing to run — write some code first.');
       return;
     }
-
     if (activeTab === 'tensorflow') {
       setOutput('TensorFlow.js runs in the browser GPU context.\nCopy this code to the browser console after importing TF.js.\n\nFor full in-browser execution, use the NumPy tab which runs CPython via Pyodide WASM.');
       return;
     }
-
     setIsRunning(true);
     setOutput('Initializing Python runtime…');
     const worker = getWorker();
@@ -189,46 +186,65 @@ _buf.getvalue()
     worker.postMessage({ id, code: currentCode });
   };
 
+  const tc = TAB_COLORS[activeTab];
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 h-[calc(100vh-160px)]">
-      <div className="rounded-xl overflow-hidden flex flex-col" style={{ background: 'var(--bg-surface)', border: '1px solid rgba(255,255,255,0.08)' }}>
+      {/* Editor panel */}
+      <div className="rounded-xl overflow-hidden flex flex-col border border-white/8 bg-slate-900/90">
         <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as Framework)}>
-          <div className="px-3" style={{ borderBottom: '1px solid rgba(255,255,255,0.07)' }}>
+          <div className="px-3 border-b border-white/7">
             <TabsList className="flex gap-1 py-2">
-              {(['numpy', 'tensorflow', 'pytorch'] as Framework[]).map(tab => (
-                <TabsTrigger key={tab} value={tab}
-                  className="px-3 py-1.5 text-sm rounded-lg transition-all
-                    data-[state=active]:text-white data-[state=active]:bg-white/10
-                    data-[state=active]:border-white/10
-                    text-slate-500 hover:text-slate-300"
-                  style={{ border: '1px solid transparent' }}
+              {(Object.entries(TAB_COLORS) as [Framework, typeof TAB_COLORS[Framework]][]).map(([tab, cfg]) => (
+                <TabsTrigger
+                  key={tab}
+                  value={tab}
+                  className="px-3 py-1.5 text-sm rounded-lg transition-all text-slate-500 hover:text-slate-300 data-[state=active]:text-white"
+                  style={activeTab === tab ? {
+                    color: cfg.color,
+                    background: cfg.bg,
+                    border: `1px solid ${cfg.border}`,
+                    boxShadow: `0 0 12px ${cfg.bg}`,
+                  } : { border: '1px solid transparent' }}
                 >
-                  {tab === 'numpy' ? 'NumPy' : tab === 'tensorflow' ? 'TensorFlow.js' : 'PyTorch'}
+                  {cfg.label}
                 </TabsTrigger>
               ))}
             </TabsList>
           </div>
-          {(['numpy', 'tensorflow', 'pytorch'] as Framework[]).map(tab => (
+          {(Object.keys(TAB_COLORS) as Framework[]).map((tab) => (
             <TabsContent key={tab} value={tab} className="flex-1 overflow-hidden m-0">
               <PythonEditor
                 value={code[tab]}
-                onChange={(val) => setCode(prev => ({ ...prev, [tab]: val }))}
+                onChange={(val) => setCode((prev) => ({ ...prev, [tab]: val }))}
                 language={tab === 'tensorflow' ? 'javascript' : 'python'}
               />
             </TabsContent>
           ))}
         </Tabs>
-        <div className="p-3 flex items-center gap-3 shrink-0" style={{ borderTop: '1px solid rgba(255,255,255,0.07)' }}>
-          <button onClick={handleRun} disabled={isRunning}
-            className="text-white text-sm font-medium px-4 py-1.5 rounded-lg transition-all disabled:opacity-50 flex items-center gap-2 hover:opacity-90"
-            style={{ background: 'linear-gradient(135deg,#2563eb,#7c3aed)' }}>
-            {isRunning ? '\u27F3 Running...' : '\u25B6 Run'}
+
+        {/* Run bar */}
+        <div className="p-3 flex items-center gap-3 shrink-0 border-t border-white/7">
+          <button
+            onClick={handleRun}
+            disabled={isRunning}
+            className="text-slate-950 text-sm font-semibold px-4 py-1.5 rounded-lg transition-all disabled:opacity-50 flex items-center gap-2 hover:scale-105 active:scale-95 animate-gradient-shift"
+            style={{
+              background: isRunning
+                ? 'linear-gradient(135deg, #475569, #334155)'
+                : 'linear-gradient(135deg, #00d4c8, #8b5cf6, #f59e0b, #00d4c8)',
+              backgroundSize: '300% 300%',
+              color: isRunning ? '#94a3b8' : '#0f172a',
+            }}
+          >
+            {isRunning ? '⟳ Running...' : '▶ Run'}
           </button>
           <span className="text-xs text-slate-500">
             {activeTab === 'numpy' ? 'CPython via Pyodide WASM' : activeTab === 'tensorflow' ? 'WebGL/WebGPU accelerated' : 'NumPy PyTorch-syntax via Pyodide'}
           </span>
         </div>
       </div>
+
       <OutputPanel output={output} framework={activeTab} />
     </div>
   );

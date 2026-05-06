@@ -93,6 +93,12 @@ const VISUALIZERS: Record<string, Visualizer[]> = {
   ],
 };
 
+const LANG_BADGE: Record<string, { color: string; bg: string; border: string }> = {
+  python:     { color: '#93c5fd', bg: 'rgba(59,130,246,0.12)',  border: 'rgba(59,130,246,0.25)' },
+  javascript: { color: '#fcd34d', bg: 'rgba(234,179,8,0.12)',   border: 'rgba(234,179,8,0.25)' },
+  typescript: { color: '#67e8f9', bg: 'rgba(6,182,212,0.12)',   border: 'rgba(6,182,212,0.25)' },
+};
+
 interface LessonContentProps {
   content: LessonSection[] | undefined;
   lessonTitle: string;
@@ -122,6 +128,7 @@ export default function LessonContent({ content, lessonTitle, lessonKey }: Lesso
   return (
     <>
       <h1 className="text-3xl font-bold text-white mb-8">{lessonTitle}</h1>
+
       {content.map((section, i) => {
         switch (section.type) {
           case 'prose':
@@ -134,20 +141,35 @@ export default function LessonContent({ content, lessonTitle, lessonKey }: Lesso
             if (section.level === 2) return <h2 key={i} className="text-xl font-bold text-white mt-10 mb-4">{section.content}</h2>;
             if (section.level === 3) return <h3 key={i} className="text-lg font-semibold text-white mt-8 mb-3">{section.content}</h3>;
             return <h4 key={i} className="font-semibold text-white mt-6 mb-2">{section.content}</h4>;
+
           case 'math':
-            return <MathBlock key={i} math={section.content ?? ''} display={section.display} />;
-          case 'code':
             return (
-              <div key={i} className="my-6 rounded-xl overflow-hidden border border-gray-700">
-                <div className="flex items-center justify-between bg-gray-800 px-4 py-2 border-b border-gray-700">
-                  <span className="text-xs text-gray-400 font-mono">{section.language ?? 'python'}</span>
-                  <span className="text-xs text-gray-500">live-editable in Playground &rarr;</span>
+              <div key={i} className="my-5 rounded-xl border border-violet-500/15 bg-violet-500/5 px-5 py-4">
+                <MathBlock math={section.content ?? ''} display={section.display} />
+              </div>
+            );
+
+          case 'code': {
+            const lang = section.language ?? 'python';
+            const badge = LANG_BADGE[lang] ?? LANG_BADGE.python;
+            return (
+              <div key={i} className="my-6 rounded-xl overflow-hidden border border-slate-700/60">
+                <div className="flex items-center justify-between bg-slate-800/90 px-4 py-2 border-b border-slate-700/60">
+                  <span
+                    className="text-xs font-mono font-semibold px-2 py-0.5 rounded"
+                    style={{ color: badge.color, background: badge.bg, border: `1px solid ${badge.border}` }}
+                  >
+                    {lang}
+                  </span>
+                  <span className="text-xs text-slate-500">live-editable in Playground &rarr;</span>
                 </div>
-                <pre className="bg-gray-900 p-4 overflow-x-auto text-sm text-gray-200 font-mono leading-relaxed">
+                <pre className="bg-slate-900 p-4 overflow-x-auto text-sm text-slate-200 font-mono leading-relaxed">
                   <code>{section.content}</code>
                 </pre>
               </div>
             );
+          }
+
           case 'quiz':
             return (
               <QuizBlock
@@ -158,32 +180,37 @@ export default function LessonContent({ content, lessonTitle, lessonKey }: Lesso
                 lessonKey={lessonKey}
               />
             );
+
           default:
             return null;
         }
       })}
 
-      {/* External visualizers */}
+      {/* Interactive Visualizers — purple gradient header */}
       {visualizers.length > 0 && (
-        <div className="mt-12 p-6 bg-gray-900 border border-gray-700 rounded-xl">
-          <h3 className="text-sm font-semibold text-purple-400 uppercase tracking-wider mb-4">
-            Interactive Visualizers
-          </h3>
-          <div className="space-y-3">
+        <div className="mt-12 rounded-xl overflow-hidden border border-violet-500/20">
+          <div className="px-5 py-3 border-b border-violet-500/20"
+            style={{ background: 'linear-gradient(135deg, rgba(139,92,246,0.12), rgba(124,58,237,0.06))' }}>
+            <h3 className="text-sm font-semibold uppercase tracking-wider"
+              style={{ background: 'linear-gradient(90deg,#c4b5fd,#a78bfa)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
+              Interactive Visualizers
+            </h3>
+          </div>
+          <div className="bg-slate-900/80 p-4 space-y-2">
             {visualizers.map((v) => (
               <a
                 key={v.url}
                 href={v.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-start gap-3 group p-3 rounded-lg border border-gray-800 hover:border-purple-500/50 hover:bg-purple-500/5 transition-all"
+                className="flex items-start gap-3 group p-3 rounded-lg border border-slate-800 hover:border-violet-500/40 hover:bg-violet-500/5 transition-all"
               >
-                <svg className="w-4 h-4 text-purple-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 text-violet-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                 </svg>
                 <div>
-                  <div className="text-sm font-medium text-white group-hover:text-purple-300 transition-colors">{v.title}</div>
-                  <div className="text-xs text-gray-400 mt-0.5">{v.description}</div>
+                  <div className="text-sm font-medium text-white group-hover:text-violet-300 transition-colors">{v.title}</div>
+                  <div className="text-xs text-slate-400 mt-0.5">{v.description}</div>
                 </div>
               </a>
             ))}
@@ -191,12 +218,12 @@ export default function LessonContent({ content, lessonTitle, lessonKey }: Lesso
         </div>
       )}
 
-      {/* Mark Complete button */}
+      {/* Mark Complete */}
       {lessonKey && (
-        <div className="mt-10 pt-8 border-t border-gray-800 flex items-center gap-4">
+        <div className="mt-10 pt-8 border-t border-slate-800 flex items-center gap-4">
           {completed ? (
-            <div className="flex items-center gap-2 text-green-400 text-sm font-medium">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="flex items-center gap-2 text-emerald-400 text-sm font-medium">
+              <svg className="w-5 h-5 animate-emerald-glow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
               Lesson completed
@@ -204,7 +231,8 @@ export default function LessonContent({ content, lessonTitle, lessonKey }: Lesso
           ) : (
             <button
               onClick={() => markComplete(lessonKey)}
-              className="flex items-center gap-2 text-sm bg-green-600 hover:bg-green-500 text-white font-medium px-5 py-2.5 rounded-lg transition-colors"
+              className="flex items-center gap-2 text-sm font-semibold px-5 py-2.5 rounded-lg text-white transition-all hover:scale-105 active:scale-95"
+              style={{ background: 'linear-gradient(135deg, #059669, #10b981)', boxShadow: '0 0 20px rgba(16,185,129,0.25)' }}
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
@@ -213,7 +241,7 @@ export default function LessonContent({ content, lessonTitle, lessonKey }: Lesso
             </button>
           )}
           {quizPassed && !completed && (
-            <span className="text-xs text-blue-400">Quiz passed — mark complete when ready</span>
+            <span className="text-xs text-violet-400">Quiz passed — mark complete when ready</span>
           )}
         </div>
       )}
@@ -221,9 +249,8 @@ export default function LessonContent({ content, lessonTitle, lessonKey }: Lesso
   );
 }
 
-// Simple inline markdown: **bold**, `code`
 function renderInlineMarkdown(text: string): string {
   return text
     .replace(/\*\*(.*?)\*\*/g, '<strong class="text-white font-semibold">$1</strong>')
-    .replace(/`([^`]+)`/g, '<code class="bg-gray-800 text-blue-300 px-1.5 py-0.5 rounded text-sm font-mono">$1</code>');
+    .replace(/`([^`]+)`/g, '<code class="bg-slate-800 text-blue-300 px-1.5 py-0.5 rounded text-sm font-mono">$1</code>');
 }
